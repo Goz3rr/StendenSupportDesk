@@ -5,7 +5,7 @@
 <!--[if gt IE 8]> <html> <![endif]-->
 <!--[if !IE]><!--><html><!-- <![endif]-->
 <head>
-	<title>StendenSupportDesk Inf1A 2014</title>
+	<title>{% block title %}{% endblock %}</title>
 	
 	<!-- Meta -->
 	<meta charset="UTF-8" />
@@ -31,17 +31,16 @@
       <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
     <![endif]-->
 
-	<script src="../assets/components/library/jquery/jquery.min.js?v=v1.2.3"></script>
-<script src="../assets/components/library/jquery/jquery-migrate.min.js?v=v1.2.3"></script>
-<script src="../assets/components/library/modernizr/modernizr.js?v=v1.2.3"></script>
-<script src="../assets/components/plugins/less-js/less.min.js?v=v1.2.3"></script>
-<script src="../assets/components/modules/admin/charts/flot/assets/lib/excanvas.js?v=v1.2.3"></script>
-<script src="../assets/components/plugins/browser/ie/ie.prototype.polyfill.js?v=v1.2.3"></script>
-<script src="../assets/components/library/jquery-ui/js/jquery-ui.min.js?v=v1.2.3"></script>
-<script src="../assets/components/plugins/jquery-ui-touch-punch/jquery.ui.touch-punch.min.js?v=v1.2.3"></script>	
+    <script src="../assets/components/library/jquery/jquery.min.js?v=v1.2.3"></script>
+    <script src="../assets/components/library/jquery/jquery-migrate.min.js?v=v1.2.3"></script>
+    <script src="../assets/components/library/modernizr/modernizr.js?v=v1.2.3"></script>
+    <script src="../assets/components/plugins/less-js/less.min.js?v=v1.2.3"></script>
+    <script src="../assets/components/modules/admin/charts/flot/assets/lib/excanvas.js?v=v1.2.3"></script>
+    <script src="../assets/components/plugins/browser/ie/ie.prototype.polyfill.js?v=v1.2.3"></script>
+    <script src="../assets/components/library/jquery-ui/js/jquery-ui.min.js?v=v1.2.3"></script>
+    <script src="../assets/components/plugins/jquery-ui-touch-punch/jquery.ui.touch-punch.min.js?v=v1.2.3"></script>
 </head>
 <body class="">
-
 		<div class="navbar navbar-fixed-top navbar-primary main" role="navigation">
     
     <div class="navbar-header pull-left">
@@ -250,23 +249,20 @@
 			</ul>
 		</div>
 		<div class="sidebarMenuWrapper">
-			<ul class="list-unstyled">
-				<li class="active"><a href="index.html?lang=en"><i class=" icon-projector-screen-line"></i><span>Dashboard</span></a></li>
+            <ul class="list-unstyled">
+                <li class="active"><a href="index.html?lang=en"><i class=" icon-projector-screen-line"></i><span>Dashboard</span></a></li>
 
-				<li class="hasSubmenu">
-					<a href="#" data-target="#support" data-toggle="collapse"><i class="icon-compose"></i><span>Support</span></a>
-					<ul class="collapse" id="support">
-						<li><a href="support_tickets.html?lang=en"><i class="icon-ticket"></i><span>Support Tickets</span></a></li>
-						<li><a href="support_questions.html?lang=en"><i class=" fa fa-question-circle"></i><span>Q&amp;A Listing</span></a></li>
-						<li><a href="support_answers.html?lang=en"><i class=" icon-paper-document-image"></i><span>Q&amp;A Page </span></a></li>
-						<li><a href="support_knowledge.html?lang=en"><i class="  icon-medical-symbol-fill"></i><span>Knowledge Base </span></a></li>
-					</ul>
-				</li>
-				
-					</ul>
-				</li>
-			
-			</ul>
+                <li class="hasSubmenu">
+                    <a href="#" data-target="#support" data-toggle="collapse"><i class="icon-compose"></i><span>Support</span></a>
+                    <ul class="collapse" id="support">
+                        <li><a href="support_tickets.html?lang=en"><i class="icon-ticket"></i><span>Support Tickets</span></a></li>
+                        <li><a href="support_questions.html?lang=en"><i class=" fa fa-question-circle"></i><span>Q&amp;A Listing</span></a></li>
+                        <li><a href="support_answers.html?lang=en"><i class=" icon-paper-document-image"></i><span>Q&amp;A Page </span></a></li>
+                        <li><a href="support_knowledge.html?lang=en"><i class="  icon-medical-symbol-fill"></i><span>Knowledge Base </span></a></li>
+                    </ul>
+                </li>
+
+            </ul>
 		</div>
 	</div>
 </div>
