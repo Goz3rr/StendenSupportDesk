@@ -2,6 +2,7 @@
     $commands = array(
         'echo $PWD',
         'whoami',
+        'git reset --hard HEAD',
         'git pull',
         'git status',
         'git submodule sync',
@@ -11,7 +12,10 @@
 
     $output = '';
     foreach($commands AS $command){
-        $tmp = shell_exec($command);
+        $tmpcommand = $command;
+        if(substr($command, 0, 3) == "git") $tmpcommand = "sudo -u goz3rr sh -c \"" . $command . "\"";
+
+        $tmp = shell_exec($tmpcommand . " 2>&1");
         $output .= "<span style=\"color: #6BE234;\">\$</span> <span style=\"color: #729FCF;\">{$command}\n</span>";
         $output .= htmlentities(trim($tmp)) . "\n";
     }
