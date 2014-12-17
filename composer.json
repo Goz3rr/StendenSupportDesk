@@ -1,0 +1,6 @@
+{
+  "require": {
+    "twig/twig": "1.*",
+    "klein/klein": "2.0.x"
+  }
+}
