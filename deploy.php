@@ -13,7 +13,7 @@
     $output = '';
     foreach($commands AS $command){
         $tmpcommand = $command;
-        if(substr($command, 0, 3) == "git") $tmpcommand = "sudo -u goz3rr sh -c \"" . $command . "\"";
+        if(substr($command, 0, 3) == "git") $tmpcommand = "sudo -u goz3rr " . $command;
 
         $tmp = shell_exec($tmpcommand . " 2>&1");
         $output .= "<span style=\"color: #6BE234;\">\$</span> <span style=\"color: #729FCF;\">{$command}\n</span>";
