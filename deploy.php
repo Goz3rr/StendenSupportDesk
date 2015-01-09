@@ -11,7 +11,7 @@
     );
 
     $output = '';
-    foreach($commands AS $command){
+    foreach($commands as $command){
         $tmpcommand = $command;
         if(substr($command, 0, 3) == "git") $tmpcommand = "sudo -u goz3rr " . $command;
 
