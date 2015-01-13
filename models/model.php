@@ -106,18 +106,19 @@
 
 		public static function Where($column, $value = null) {
 			if(is_array($column)) {
-				
+
 			} else {
-				if($column == null || $value == null) return;
+				if($column == null || $value == null) return false;
 
-				$q = DB::Prepare(sprintf("SELECT * FROM %s WHERE ? = ? LIMIT 1;", static::GetTable()), $column, $value);
-
+				$q = DB::Prepare(sprintf("SELECT * FROM %s WHERE %s = ? LIMIT 1;", static::GetTable(), $column), $value);
+				
 				if($q && $q->rowCount() > 0) {
 					$ent = new static();
 					$ent->Load($q->fetch(PDO::FETCH_ASSOC));
 					return $ent;
 				}
 			}
+
 			return false;
  		}
 	}
