@@ -75,7 +75,6 @@
 			$q = DB::Prepare(sprintf("SELECT * FROM %s WHERE %s = ?;", static::GetTable(), static::GetMap()['ID']), $id);
 
 			if($q) {
-				var_dump($q);
 				$ent = new static();
 				$ent->Load($q->fetch(PDO::FETCH_ASSOC));
 				return $ent;
@@ -104,4 +103,21 @@
 
 			return false;
 		}
+
+		public static function Where($column, $value = null) {
+			if(is_array($column)) {
+				
+			} else {
+				if($column == null || $value == null) return;
+
+				$q = DB::Prepare(sprintf("SELECT * FROM %s WHERE ? = ? LIMIT 1;", static::GetTable()), $column, $value);
+
+				if($q && $q->rowCount() > 0) {
+					$ent = new static();
+					$ent->Load($q->fetch(PDO::FETCH_ASSOC));
+					return $ent;
+				}
+			}
+			return false;
+ 		}
 	}
