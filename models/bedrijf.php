@@ -1,6 +1,6 @@
 <?php
 	class Bedrijf extends Model {
-		public function GetMap() {
+		public static function GetMap() {
 			return array(
 				"ID" => "BedrijfID",
 				"Naam" => "BedrijfNaam",
@@ -12,7 +12,7 @@
 			);
 		}
 
-		public function GetTable() {
+		public static function GetTable() {
 			return "bedrijf";
 		}
 	}

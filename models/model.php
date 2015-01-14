@@ -6,16 +6,16 @@
 			}
 		}
 
-		public function GetMap() {
+		public static function GetMap() {
 			return array();
 		}
 
-		public function GetMapKey($key) {
+		public static function GetMapKey($key) {
 			$map = static::GetMap();
 			return $map[$key];
 		}
 
-		public function GetTable() {
+		public static function GetTable() {
 			return "";
 		}
 
@@ -70,14 +70,14 @@
 
 		public function Delete() {
 			if($this->ID == null) return false;
-
-			return DB::Prepare(sprintf("DELETE FROM %s WHERE %s = ?;", static::GetTable(), static::GetMapKey('ID'])), $this->ID);
+echo "wtf";
+			return DB::Prepare(sprintf("DELETE FROM %s WHERE %s = ?;", static::GetTable(), static::GetMapKey('ID')), $this->ID);
 		}
 
 		public static function Get($id) {
 			if($id == null) return false;
 
-			$q = DB::Prepare(sprintf("SELECT * FROM %s WHERE %s = ?;", static::GetTable(), static::GetMapKey('ID'])), $id);
+			$q = DB::Prepare(sprintf("SELECT * FROM %s WHERE %s = ?;", static::GetTable(), static::GetMapKey('ID')), $id);
 
 			if($q) {
 				$ent = new static();

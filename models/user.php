@@ -1,6 +1,6 @@
 <?php
 	class User extends Model {
-		public function GetMap() {
+		public static function GetMap() {
 			return array(
 				"ID" => "UserID",
 				"Inlog" => "UserInlog",
@@ -15,7 +15,7 @@
 			);
 		}
 
-		public function GetTable() {
+		public static function GetTable() {
 			return "user";
 		}
 	}

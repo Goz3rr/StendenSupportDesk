@@ -1,6 +1,6 @@
 <?php
 	class Product extends Model {
-		public function GetMap() {
+		public static function GetMap() {
 			return array(
 				"ID" => "ProductID",
 				"Product" => "Product",
@@ -10,7 +10,7 @@
 			);
 		}
 
-		public function GetTable() {
+		public static function GetTable() {
 			return "product";
 		}
 	}

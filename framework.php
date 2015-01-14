@@ -44,18 +44,17 @@
 			return $twig->render('login.twig', array('errormsg' => "Vul een gebruikersnaam en wachtwoord in"));
 		}
 
-		$user = User::Where('UserInlog', $username);
-		if($user == false || !password_verify($password, $user->Wachtwoord)) {
+		$valid = Auth::LogIn($username, $password, $remember);
+		if(!$valid) {
 			return $twig->render('login.twig', array('errormsg' => "Incorrecte gebruikersnaam of wachtwoord"));
 		}
-
-		Auth::LogIn($username, $password, $remember);
 
 		$response->redirect('/')->send();
 	});
 
 	$klein->respond('GET', '/logout', function($request, $response, $service) use(&$twig) {
-
+		Auth::LogOut();
+		$response->redirect('/')->send();
 	});
 
 	$klein->respond('GET', '/phpinfo', function() {

@@ -1,6 +1,6 @@
 <?php
 	class Reactie extends Model {
-		public function GetMap() {
+		public static function GetMap() {
 			return array(
 				"ID" => "IncReactieID",
 				"User" => "IncUser",
@@ -11,7 +11,7 @@
 			);
 		}
 
-		public function GetTable() {
+		public static function GetTable() {
 			return "increactie";
 		}
 	}
