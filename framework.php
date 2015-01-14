@@ -22,8 +22,12 @@
 
 	$klein = new \Klein\Klein();
 
-	$klein->respond('GET', '/', function() use(&$twig) {
-		return $twig->render('index.twig');
+	$klein->respond('GET', '/', function($request, $response, $service) use(&$twig) {
+		if(Auth::IsLoggedIn()) {
+			return $twig->render('index.twig', array('gebruikerNaam' => $_SESSION['naam']));
+		}
+
+		$response->redirect('/login')->send();
 	});
 
 	$klein->respond('GET', '/login', function() use(&$twig) {

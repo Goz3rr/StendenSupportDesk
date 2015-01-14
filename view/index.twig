@@ -12,7 +12,7 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="index.html">Stenden Support Desk</a>
+                <a class="navbar-brand" href="/">Stenden Support Desk</a>
             </div>
 
             <ul class="nav navbar-top-links navbar-right">
@@ -67,7 +67,7 @@
                 </li>
                 <li class="dropdown">
                     <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                        <img alt="" width="48px" height="48px" class="img-circle" src="https://s3.amazonaws.com/uifaces/faces/twitter/osvaldas/128.jpg"> John Doe <i class="fa fa-caret-down"></i>
+                        <img alt="" width="48px" height="48px" class="img-circle" src="/avatars/{{ gebruikerAvatar | default("default.jpg") }}"> {{ gebruikerNaam }} <i class="fa fa-caret-down"></i>
                     </a>
                     <ul class="dropdown-menu dropdown-user">
                         <li><a href="#"><i class="fa fa-user fa-fw"></i> User Profile</a>
@@ -75,7 +75,7 @@
                         <li><a href="#"><i class="fa fa-gear fa-fw"></i> Settings</a>
                         </li>
                         <li class="divider"></li>
-                        <li><a href="login.html"><i class="fa fa-sign-out fa-fw"></i> Logout</a>
+                        <li><a href="/logout"><i class="fa fa-sign-out fa-fw"></i> Logout</a>
                         </li>
                     </ul>
                 </li>
@@ -95,7 +95,7 @@
                             </div>
                         </li>
                         <li>
-                            <a href="index.html"><i class="fa fa-dashboard fa-fw"></i> Dashboard</a>
+                            <a href="/"><i class="fa fa-dashboard fa-fw"></i> Dashboard</a>
                         </li>
                         <li>
                             <a href="#"><i class="fa fa-bar-chart-o fa-fw"></i> Charts<span class="fa arrow"></span></a>
