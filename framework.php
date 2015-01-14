@@ -1,7 +1,13 @@
 <?php
+	error_reporting(E_ALL);
+	ini_set('display_errors', '1');
+
+	session_start();
+
 	require_once(__DIR__ . '/vendor/autoload.php');
 
 	require_once(__DIR__ . '/sql.php');
+	require_once(__DIR__ . '/auth.php');
 
 	require_once(__DIR__ . '/models/model.php');
 	require_once(__DIR__ . '/models/bedrijf.php');
@@ -25,6 +31,11 @@
 	});
 
 	$klein->respond('POST', '/login', function($request, $response, $service) use(&$twig) {
+		if(!isset($_POST['submit'])) {
+			$response->redirect('/login')->send();
+			return;
+		}
+
 		$username = $_POST['username'];
 		$password = $_POST['password'];
 		$remember = isset($_POST['remember']) ? $_POST['remember'] : false;
@@ -38,7 +49,13 @@
 			return $twig->render('login.twig', array('errormsg' => "Incorrecte gebruikersnaam of wachtwoord"));
 		}
 
+		Auth::LogIn($username, $password, $remember);
+
 		$response->redirect('/')->send();
+	});
+
+	$klein->respond('GET', '/logout', function($request, $response, $service) use(&$twig) {
+
 	});
 
 	$klein->respond('GET', '/phpinfo', function() {
