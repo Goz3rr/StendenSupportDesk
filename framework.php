@@ -61,17 +61,45 @@
 		$response->redirect('/')->send();
 	});
 
-	$klein->respond('GET', '/phpinfo', function() {
-		ob_start();
-		phpinfo();
-		$info = ob_get_contents();
-		ob_end_clean();
+	$klein->respond('GET', '/profile', function($request, $response, $service) use(&$twig) {
+		return $twig->render('faq.twig', array('gebruikerNaam' => $_SESSION['naam']));
+	});
 
-		return $info;
+	$klein->respond('GET', '/settings', function($request, $response, $service) use(&$twig) {
+		return $twig->render('faq.twig', array('gebruikerNaam' => $_SESSION['naam']));
+	});
+
+	$klein->respond('POST', '/search', function($request, $response, $service) use(&$twig) {
+		return $_POST['search'];
+	});
+
+	$klein->respond('GET', '/tickets/[:action]', function($request, $response, $service) use(&$twig) {
+		return $twig->render('faq.twig', array('gebruikerNaam' => $_SESSION['naam']));
+	});
+
+	$klein->respond('GET', '/faq', function($request, $response, $service) use(&$twig) {
+		return $twig->render('faq.twig', array('gebruikerNaam' => $_SESSION['naam']));
+	});
+
+	$klein->respond('GET', '/stats', function($request, $response, $service) use(&$twig) {
+		return $twig->render('faq.twig', array('gebruikerNaam' => $_SESSION['naam']));
 	});
 
 	/*
 	$klein->respond('GET', '/maakadmin', function() {
+		$bedrijf = new Bedrijf();
+
+		$bedrijf->Naam = "Stenden eHelp";
+		$bedrijf->Adres = "Van Schaikweg 94";
+		$bedrijf->Postcode = "7811KL";
+		$bedrijf->Plaats = "Emmen";
+		$bedrijf->Telefoon = "0591853100";
+		$bedrijf->Email = "receptie.emmen@stenden.com";
+
+		$bedrijf->Save();
+
+		var_dump($bedrijf);
+
 		$user = new User();
 
 		$user->Inlog = 'admin';
@@ -86,5 +114,6 @@
 		var_dump($user);
 	});
 	*/
+	
 
 	$klein->dispatch();

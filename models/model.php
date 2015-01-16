@@ -56,7 +56,7 @@
 
 				$fields = implode(", ", $fields);
 
-				$sql = sprintf("UPDATE %s SET %s WHERE `ID` = %d", static::GetTable(), $fields, $this->ID);
+				$sql = sprintf("UPDATE %s SET %s WHERE `%s` = %d", static::GetTable(), $fields, static::GetMapKey('ID'), $this->ID);
 			}
 
 			try {
@@ -70,7 +70,7 @@
 
 		public function Delete() {
 			if($this->ID == null) return false;
-echo "wtf";
+
 			return DB::Prepare(sprintf("DELETE FROM %s WHERE %s = ?;", static::GetTable(), static::GetMapKey('ID')), $this->ID);
 		}
 
@@ -125,5 +125,5 @@ echo "wtf";
 			}
 
 			return false;
- 		}
+		}
 	}
