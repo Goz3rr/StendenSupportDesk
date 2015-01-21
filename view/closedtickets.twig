@@ -3,5 +3,16 @@
 {% block title %}Gesloten Incidenten | Stenden Support Desk{% endblock %}
 
 {% block innerContent %}
-    godverdomme stijn
+    <table class="table table-hover">
+        <thead>
+        <tr><th># ID</th><th>Type</th><th>Kanaal</th><th>Melder</th><th>Omschrijving</th><th>Prioriteit</th><th>Datum</th></tr>
+        </thead>
+        {% if items %}
+            {% for item in items %}
+                <tr><td>{{ item.incidentID }}</td><td>{{ item.incidentType }}</td><td>{{ item.incidentMelder }}</td><td>{{ item.incidentOmschrijving }}</td><td>{{ item.incidentPrioriteit }}</td><td>{{ item.incidentDatum }}</td></tr>
+            {% endfor %}
+        {% else %}
+            <tr><td colspan="7">Geen resultaten gevonden</td></tr>
+        {%  endif %}
+    </table>
 {% endblock %}
