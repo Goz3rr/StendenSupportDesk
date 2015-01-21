@@ -144,15 +144,17 @@
 		}
 
 		if(Auth::IsMedewerker()) {
-			$titel = $_POST['titel'];
-			$vraag = $_POST['vraag'];
-			$antwoord = $_POST['antwoord'];
+			$titel = trim($_POST['titel']);
+			$vraag = trim($_POST['vraag']);
+			$antwoord = trim($_POST['antwoord']);
 
-			$faq = new FAQ();
-			$faq->Titel = $titel;
-			$faq->Omschrijving = $vraag;
-			$faq->Oplossing = $antwoord;
-			$faq->Save();
+			if(!empty($titel) && !empty($vraag) && !empty($antwoord)) {
+				$faq = new FAQ();
+				$faq->Titel = $titel;
+				$faq->Omschrijving = $vraag;
+				$faq->Oplossing = $antwoord;
+				$faq->Save();
+			}
 		}
 
 		$response->redirect('/faq')->send();
