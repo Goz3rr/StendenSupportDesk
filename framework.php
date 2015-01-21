@@ -74,10 +74,13 @@
 			$response->redirect('/login')->send();
 			return;
 		}
-		$username = $_POST['username'];
 		$password = $_POST['wachtwoord'];
 		$email = $_POST['email'];
-		$telefoon = $_POST['tnummer'];
+
+		$user=User::Where("UserID",$_SESSION["uid"]);
+
+		$user->wachtwoord= password_hash($password, PASSWORD_DEFAULT);
+		$user->Email=$email;
 
 		return $twig->render('profile.twig', array('gebruikerNaam' => $_SESSION['naam']));
 	});
