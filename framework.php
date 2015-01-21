@@ -69,6 +69,18 @@
 
 		return $twig->render('profile.twig', array('gebruikerNaam' => $_SESSION['naam']));
 	});
+	$klein->respond('POST', '/profile', function($request, $response, $service) use(&$twig) {
+		if(!Auth::IsLoggedIn()) {
+			$response->redirect('/login')->send();
+			return;
+		}
+		$username = $_POST['username'];
+		$password = $_POST['wachtwoord'];
+		$email = $_POST['email'];
+		$telefoon = $_POST['tnummer'];
+
+		return $twig->render('profile.twig', array('gebruikerNaam' => $_SESSION['naam']));
+	});
 
 	$klein->respond('GET', '/settings', function($request, $response, $service) use(&$twig) {
 		if(!Auth::IsLoggedIn()) {
