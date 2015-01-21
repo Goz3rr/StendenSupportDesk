@@ -130,7 +130,29 @@
 		}
 
 		$entries = FAQ::GetAll();
-		return $twig->render('faq.twig', array('gebruikerNaam' => $_SESSION['naam'], 'entries' => $entries));
+		$canEdit = Auth::IsMedewerker();
+		return $twig->render('faq.twig', array('gebruikerNaam' => $_SESSION['naam'], 'entries' => $entries, 'canEdit' => $canEdit));
+	});
+
+	$klein->respond('POST', '/faqadd', function($request, $response, $service) use(&$twig) {
+		if(!Auth::IsLoggedIn()) {
+			$response->redirect('/login')->send();
+			return;
+		}
+
+		if(Auth::IsMedewerker()) {
+			$titel = $_POST['titel'];
+			$vraag = $_POST['vraag'];
+			$antwoord = $_POST['antwoord'];
+
+			$faq = new FAQ();
+			$faq->Titel = $titel;
+			$faq->Omschrijving = $vraag;
+			$faq->Oplossing = $antwoord;
+			$faq->Save();
+		}
+
+		$response->redirect('/faq')->send();
 	});
 
 	$klein->respond('GET', '/stats', function($request, $response, $service) use(&$twig) {

@@ -24,4 +24,25 @@
 		public static function IsLoggedIn() {
 			return isset($_SESSION['uid']);
 		}
+
+		public static function IsTeamLeider($user = null) {
+			if($user == null) $user = $_SESSION['uid'];
+			if(is_numeric($user)) $user = User::Where('UserID', $user);
+
+			return $user->BedrijfID == 1 && $user->Functie == "TeamLeider";
+		}
+
+		public static function IsMedewerker($user = null) {
+			if($user == null) $user = $_SESSION['uid'];
+			if(is_numeric($user)) $user = User::Where('UserID', $user);
+
+			return $user->BedrijfID == 1;
+		}
+
+		public static function IsBeheerder($user = null) {
+			if($user == null) $user = $_SESSION['uid'];
+			if(is_numeric($user)) $user = User::Where('UserID', $user);
+
+			return $user->BedrijfID == 1 && $user->Functie == "Beheerder";
+		}
 	}
