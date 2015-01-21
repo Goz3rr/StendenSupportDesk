@@ -1,7 +1,7 @@
 {
   "require": {
     "twig/twig": "1.*",
-    "klein/klein": "2.0.x",
+    "klein/klein": "2.1.0",
     "ircmaxell/password-compat": "~1.0"
   }
 }

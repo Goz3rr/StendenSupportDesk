@@ -62,27 +62,75 @@
 	});
 
 	$klein->respond('GET', '/profile', function($request, $response, $service) use(&$twig) {
-		return $twig->render('faq.twig', array('gebruikerNaam' => $_SESSION['naam']));
+		if(!Auth::IsLoggedIn()) {
+			$response->redirect('/login')->send();
+			return;
+		}
+
+		return $twig->render('profile.twig', array('gebruikerNaam' => $_SESSION['naam']));
 	});
 
 	$klein->respond('GET', '/settings', function($request, $response, $service) use(&$twig) {
-		return $twig->render('faq.twig', array('gebruikerNaam' => $_SESSION['naam']));
+		if(!Auth::IsLoggedIn()) {
+			$response->redirect('/login')->send();
+			return;
+		}
+
+		return $twig->render('settings.twig', array('gebruikerNaam' => $_SESSION['naam']));
 	});
 
 	$klein->respond('POST', '/search', function($request, $response, $service) use(&$twig) {
+		if(!Auth::IsLoggedIn()) {
+			$response->redirect('/login')->send();
+			return;
+		}
+
 		return $_POST['search'];
 	});
 
-	$klein->respond('GET', '/tickets/[:action]', function($request, $response, $service) use(&$twig) {
-		return $twig->render('faq.twig', array('gebruikerNaam' => $_SESSION['naam']));
+	$klein->respond('GET', '/tickets/[create|open|closed|view|new|newreplies:action]?/[i:id]?', function($request, $response, $service) use(&$twig) {
+		if(!Auth::IsLoggedIn()) {
+			$response->redirect('/login')->send();
+			return;
+		}
+
+		if($request->action == 'create') {
+			return $twig->render('createticket.twig', array('gebruikerNaam' => $_SESSION['naam']));
+		} elseif($request->action == 'open') {
+			return $twig->render('opentickets.twig', array('gebruikerNaam' => $_SESSION['naam']));
+		} elseif($request->action == 'closed') {
+			return $twig->render('closedtickets.twig', array('gebruikerNaam' => $_SESSION['naam']));
+		} elseif($request->action == 'view') {
+			return $twig->render('ticket.twig', array('gebruikerNaam' => $_SESSION['naam']));
+		} elseif($request->action == 'new') {
+			return $twig->render('newtickets.twig', array('gebruikerNaam' => $_SESSION['naam']));
+		} elseif($request->action == 'newreplies') {
+			return $twig->render('newticketreplies.twig', array('gebruikerNaam' => $_SESSION['naam']));
+		}
+
+		return "wut";
 	});
 
 	$klein->respond('GET', '/faq', function($request, $response, $service) use(&$twig) {
+		if(!Auth::IsLoggedIn()) {
+			$response->redirect('/login')->send();
+			return;
+		}
+
 		return $twig->render('faq.twig', array('gebruikerNaam' => $_SESSION['naam']));
 	});
 
 	$klein->respond('GET', '/stats', function($request, $response, $service) use(&$twig) {
-		return $twig->render('faq.twig', array('gebruikerNaam' => $_SESSION['naam']));
+		if(!Auth::IsLoggedIn()) {
+			$response->redirect('/login')->send();
+			return;
+		}
+		
+		return $twig->render('stats.twig', array('gebruikerNaam' => $_SESSION['naam']));
+	});
+
+	$klein->onHttpError(function($code, $router) {
+		$router->response()->body('error ' . $code);
 	});
 
 	/*
