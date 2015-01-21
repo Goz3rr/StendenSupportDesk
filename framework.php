@@ -100,7 +100,7 @@
 			return;
 		}
 
-		return $_POST['search'];
+		return $twig->render('search.twig', array('search' => $_POST['search']));
 	});
 
 	$klein->respond('GET', '/tickets/[create|open|closed|view|new|newreplies:action]?/[i:id]?', function($request, $response, $service) use(&$twig) {
