@@ -117,7 +117,8 @@
 			return;
 		}
 
-		return $twig->render('faq.twig', array('gebruikerNaam' => $_SESSION['naam']));
+		$entries = FAQ::GetAll();
+		return $twig->render('faq.twig', array('gebruikerNaam' => $_SESSION['naam'], 'entries' => $entries));
 	});
 
 	$klein->respond('GET', '/stats', function($request, $response, $service) use(&$twig) {
@@ -125,7 +126,7 @@
 			$response->redirect('/login')->send();
 			return;
 		}
-		
+
 		return $twig->render('stats.twig', array('gebruikerNaam' => $_SESSION['naam']));
 	});
 

@@ -189,3 +189,7 @@ body {
 .panel-yellow a:hover {
     color: #df8a13;
 }
+
+#accordion-cat {
+    padding-top: 30px;
+}

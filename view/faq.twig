@@ -3,5 +3,31 @@
 {% block title %}FAQ | Stenden Support Desk{% endblock %}
 
 {% block innerContent %}
-   Godverdomme wisserrrrr ( ͡° ͜ʖ ͡°)
+    <div class="panel-group" id="accordion-cat">
+        {% for q in entries %}
+            <div class="panel panel-default panel-faq">
+                <div class="panel-heading">
+                    <a data-toggle="collapse" data-parent="#accordion-cat" href="#faq-cat-sub-{{ loop.index0 }}">
+                        <h4 class="panel-title">
+                            {{ q.Titel }}
+                            <span class="pull-right"><i class="glyphicon glyphicon-plus"></i></span>
+                        </h4>
+                    </a>
+                </div>
+                <div id="faq-cat-sub-{{ loop.index0 }}" class="panel-collapse collapse">
+                    <div class="panel-body">
+                        <p>
+                        <strong>Vraag:</strong><br>
+                        {{ q.Omschrijving }}
+                        </p>
+
+                        <p>
+                        <strong>Antwoord:</strong><br>
+                        {{ q.Oplossing }}
+                        </p>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
 {% endblock %}
