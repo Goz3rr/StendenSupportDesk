@@ -3,5 +3,45 @@
 {% block title %}Nieuw Incident | Stenden Support Desk{% endblock %}
 
 {% block innerContent %}
-    godverdomme stijn
+<h2>Nieuw incident</h2>
+<br />
+    <form role="form" method="POST" action="/login">
+                            <fieldset>
+                                <div class="form-group">
+                                	Klant
+                                    <input class="form-control" placeholder="Klant" name="klant" type="text" autofocus>
+                                </div>
+                                	Aanmelder
+                                <div class="form-group">
+                                    <input class="form-control" placeholder="Aanmelder" name="aanmelder" type="text">
+                                </div>
+                                	Incident Type
+                                <div class="form-group">
+                                    <select name="type">
+                					<option value="Incident">Incident</option>
+                					<option value="Vraag">Vraag</option>
+                					<option value="Verzoek">Verzoek</option>
+                					<option value="Functioneel probleem">Functioneel probleem</option>
+                					<option value="Techisch probleem">Technisch probleem</option>
+            					</select>
+                                </div>
+                                Incident Kanaal
+                                <div class="form-group">
+                                    <select name="kanaal">
+                                    <option value="Self-Service">Self-Service</option>
+                					<option value="E-mail">E-mail</option>
+                					<option value="Telefonisch">Telefonisch</option>
+            					</select>
+                                </div>
+                                	Incidentomschrijving
+                                <div class="form-group">
+                                    <input class="form-control" placeholder="Korte omschrijving van incident" name="titel" type="text">
+                                </div>
+                                Omschrijving
+                                <div class="form-group">
+                                    <textarea class="form-control" placeholder="Geef een omschrijving van het probleem" name="omschrijving"></textarea>
+                                </div>
+                                <input type="submit" name="submit" class="btn btn-lg btn-success btn-block">
+                            </fieldset>
+                        </form>
 {% endblock %}
