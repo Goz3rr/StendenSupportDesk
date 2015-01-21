@@ -3,8 +3,8 @@
 {% block title %}Nieuw Incident | Stenden Support Desk{% endblock %}
 
 {% block innerContent %}
+<div class="row">
 <h2>Nieuw incident</h2>
-<br />
     <form role="form" method="POST" action="/login">
                             <fieldset>
                                 <div class="form-group">
@@ -41,7 +41,8 @@
                                 <div class="form-group">
                                     <textarea class="form-control" placeholder="Geef een omschrijving van het probleem" name="omschrijving"></textarea>
                                 </div>
-                                <input type="submit" name="submit" class="btn btn-lg btn-success btn-block">
+                                <input type="submit" name="submit" class="btn btn-lg btn-success btn-block" value="Opslaan">
                             </fieldset>
                         </form>
+                    </div>
 {% endblock %}
