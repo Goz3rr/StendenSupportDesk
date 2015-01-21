@@ -6,7 +6,9 @@
 				"Type" => "IncidentType",
 				"Kanaal" => "IncidentKanaal",
 				"Lijn" => "IncidentLijn",
-				"Prioriteit" => "IncidentPrioriteit"
+				"Prioriteit" => "IncidentPrioriteit",
+				"MedewerkerID" => "IncidentMedewerker",
+				"LaatstBekeken" => "IncidentLaatstBekeken",
 			);
 		}
 
