@@ -17,24 +17,37 @@
 	require_once(__DIR__ . '/models/reactie.php');
 	require_once(__DIR__ . '/models/user.php');
 
-	$twigLoader = new Twig_Loader_Filesystem(__DIR__ . '/view');
-	$twig = new Twig_Environment($twigLoader);
+	require_once(__DIR__ . '/view.php');
 
 	$klein = new \Klein\Klein();
 
-	$klein->respond('GET', '/', function($request, $response, $service) use(&$twig) {
+	$klein->respond('GET', '/', function($request, $response, $service) {
 		if(Auth::IsLoggedIn()) {
-			return $twig->render('index.twig', array('gebruikerNaam' => $_SESSION['naam']));
+
+			try {
+				//$q = DB::Query("SELECT ");
+			} catch(PDOException $ex) {
+				echo "SQL Error: " . $ex->getMessage();
+			}
+
+			$stats = array(
+				"nieuw" => 0,
+				"opgelost" => 0,
+				"openstaande" => 0,
+				"onbehandelde" => 0
+			);
+
+			return View::Render('index', array('stats' => $stats));
 		}
 
 		$response->redirect('/login')->send();
 	});
 
-	$klein->respond('GET', '/login', function() use(&$twig) {
-		return $twig->render('login.twig');
+	$klein->respond('GET', '/login', function() {
+		return View::Render('login');
 	});
 
-	$klein->respond('POST', '/login', function($request, $response, $service) use(&$twig) {
+	$klein->respond('POST', '/login', function($request, $response, $service) {
 		if(!isset($_POST['submit'])) {
 			$response->redirect('/login')->send();
 			return;
@@ -45,31 +58,31 @@
 		$remember = isset($_POST['remember']) ? $_POST['remember'] : false;
 
 		if(empty($username) || empty($password)) {
-			return $twig->render('login.twig', array('errormsg' => "Vul een gebruikersnaam en wachtwoord in"));
+			return View::Render('login', array('errormsg' => "Vul een gebruikersnaam en wachtwoord in"));
 		}
 
 		$valid = Auth::LogIn($username, $password, $remember);
 		if(!$valid) {
-			return $twig->render('login.twig', array('errormsg' => "Incorrecte gebruikersnaam of wachtwoord"));
+			return View::Render('login', array('errormsg' => "Incorrecte gebruikersnaam of wachtwoord"));
 		}
 
 		$response->redirect('/')->send();
 	});
 
-	$klein->respond('GET', '/logout', function($request, $response, $service) use(&$twig) {
+	$klein->respond('GET', '/logout', function($request, $response, $service) {
 		Auth::LogOut();
 		$response->redirect('/')->send();
 	});
 
-	$klein->respond('GET', '/profile', function($request, $response, $service) use(&$twig) {
+	$klein->respond('GET', '/profile', function($request, $response, $service) {
 		if(!Auth::IsLoggedIn()) {
 			$response->redirect('/login')->send();
 			return;
 		}
 
-		return $twig->render('profile.twig', array('gebruikerNaam' => $_SESSION['naam']));
+		return View::Render('profile');
 	});
-	$klein->respond('POST', '/profile', function($request, $response, $service) use(&$twig) {
+	$klein->respond('POST', '/profile', function($request, $response, $service) {
 		if(!Auth::IsLoggedIn()) {
 			$response->redirect('/login')->send();
 			return;
@@ -82,51 +95,51 @@
 		$user->wachtwoord= password_hash($password, PASSWORD_DEFAULT);
 		$user->Email=$email;
 
-		return $twig->render('profile.twig', array('gebruikerNaam' => $_SESSION['naam']));
+		$response->redirect('/profile')->send();
 	});
 
-	$klein->respond('GET', '/settings', function($request, $response, $service) use(&$twig) {
+	$klein->respond('GET', '/settings', function($request, $response, $service) {
 		if(!Auth::IsLoggedIn()) {
 			$response->redirect('/login')->send();
 			return;
 		}
 
-		return $twig->render('settings.twig', array('gebruikerNaam' => $_SESSION['naam']));
+		return View::Render('settings');
 	});
 
-	$klein->respond('POST', '/search', function($request, $response, $service) use(&$twig) {
+	$klein->respond('POST', '/search', function($request, $response, $service) {
 		if(!Auth::IsLoggedIn()) {
 			$response->redirect('/login')->send();
 			return;
 		}
 
-		return $twig->render('search.twig', array('search' => $_POST['search']));
+		return View::Render('search', array('search' => $_POST['search']));
 	});
 
-	$klein->respond('GET', '/tickets/[create|open|closed|view|new|newreplies:action]?/[i:id]?', function($request, $response, $service) use(&$twig) {
+	$klein->respond('GET', '/tickets/[create|open|closed|view|new|newreplies:action]?/[i:id]?', function($request, $response, $service) {
 		if(!Auth::IsLoggedIn()) {
 			$response->redirect('/login')->send();
 			return;
 		}
 
 		if($request->action == 'create') {
-			return $twig->render('createticket.twig', array('gebruikerNaam' => $_SESSION['naam']));
+			return View::Render('createticket');
 		} elseif($request->action == 'open') {
-			return $twig->render('opentickets.twig', array('gebruikerNaam' => $_SESSION['naam']));
+			return View::Render('opentickets');
 		} elseif($request->action == 'closed') {
-			return $twig->render('closedtickets.twig', array('gebruikerNaam' => $_SESSION['naam']));
+			return View::Render('closedtickets');
 		} elseif($request->action == 'view') {
-			return $twig->render('ticket.twig', array('gebruikerNaam' => $_SESSION['naam']));
+			return View::Render('ticket');
 		} elseif($request->action == 'new') {
-			return $twig->render('newtickets.twig', array('gebruikerNaam' => $_SESSION['naam']));
+			return View::Render('newtickets');
 		} elseif($request->action == 'newreplies') {
-			return $twig->render('newticketreplies.twig', array('gebruikerNaam' => $_SESSION['naam']));
+			return View::Render('newticketreplies');
 		}
 
 		return "wut";
 	});
 
-	$klein->respond('GET', '/faq', function($request, $response, $service) use(&$twig) {
+	$klein->respond('GET', '/faq', function($request, $response, $service) {
 		if(!Auth::IsLoggedIn()) {
 			$response->redirect('/login')->send();
 			return;
@@ -134,10 +147,10 @@
 
 		$entries = FAQ::GetAll();
 		$canEdit = Auth::IsMedewerker();
-		return $twig->render('faq.twig', array('gebruikerNaam' => $_SESSION['naam'], 'entries' => $entries, 'canEdit' => $canEdit));
+		return View::render('faq', array('entries' => $entries, 'canEdit' => $canEdit));
 	});
 
-	$klein->respond('POST', '/faqadd', function($request, $response, $service) use(&$twig) {
+	$klein->respond('POST', '/faqadd', function($request, $response, $service) {
 		if(!Auth::IsLoggedIn()) {
 			$response->redirect('/login')->send();
 			return;
@@ -160,13 +173,13 @@
 		$response->redirect('/faq')->send();
 	});
 
-	$klein->respond('GET', '/stats', function($request, $response, $service) use(&$twig) {
+	$klein->respond('GET', '/stats', function($request, $response, $service) {
 		if(!Auth::IsLoggedIn()) {
 			$response->redirect('/login')->send();
 			return;
 		}
 
-		return $twig->render('stats.twig', array('gebruikerNaam' => $_SESSION['naam']));
+		return View::render('stats');
 	});
 
 	$klein->onHttpError(function($code, $router) {

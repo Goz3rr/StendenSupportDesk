@@ -77,12 +77,16 @@
 		public static function Get($id) {
 			if($id == null) return false;
 
-			$q = DB::Prepare(sprintf("SELECT * FROM %s WHERE %s = ?;", static::GetTable(), static::GetMapKey('ID')), $id);
+			try {
+				$q = DB::Prepare(sprintf("SELECT * FROM %s WHERE %s = ?;", static::GetTable(), static::GetMapKey('ID')), $id);
 
-			if($q) {
-				$ent = new static();
-				$ent->Load($q->fetch(PDO::FETCH_ASSOC));
-				return $ent;
+				if($q) {
+					$ent = new static();
+					$ent->Load($q->fetch(PDO::FETCH_ASSOC));
+					return $ent;
+				}
+			} catch(PDOException $ex) {
+				echo "SQL Error: " . $ex->getMessage();
 			}
 
 			return false;
