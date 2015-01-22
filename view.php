@@ -8,7 +8,7 @@
 			self::$twig = new Twig_Environment(self::$twigLoader);
 		}
 
-		public static function Render($file, $args) {
+		public static function Render($file, $args = array()) {
 			if(substr($file, -5) != '.twig') $file = $file . '.twig';
 
 			$default = array();
