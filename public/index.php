@@ -1,2 +1,2 @@
 <?php
-	require('../framework.php');
+	require('../core/framework.php');

@@ -25,6 +25,13 @@
 			return isset($_SESSION['uid']);
 		}
 
+		public static function CheckLoggedIn() {
+			if(!Auth::IsLoggedIn()) {
+				header("Location: /login");
+				exit;
+			}
+		}
+
 		public static function IsTeamLeider($user = null) {
 			if($user == null) $user = $_SESSION['uid'];
 			if(is_numeric($user)) $user = User::Where('UserID', $user);

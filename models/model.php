@@ -92,8 +92,8 @@
 			return false;
 		}
 
-		public static function GetAll() {
-			$q = DB::Query("SELECT * FROM " . static::GetTable());
+		public static function GetAll($reversed = false) {
+			$q = DB::Query("SELECT * FROM " . static::GetTable() . " ORDER BY " . static::GetMapKey('ID') . ($reversed ? " DESC" : " ASC"));
 
 			try {
 				if($q->execute()) {

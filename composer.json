@@ -1,6 +1,8 @@
 {
   "require": {
     "twig/twig": "1.*",
+    "league/commonmark": "~0.5",
+    "aptoma/twig-markdown": "~1.1",
     "klein/klein": "2.1.0",
     "ircmaxell/password-compat": "~1.0"
   }

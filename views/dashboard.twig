@@ -1,0 +1,126 @@
+{% extends "base.twig" %}
+
+{% block content %}
+    <div id="wrapper">
+        <nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="/">Stenden Support Desk</a>
+            </div>
+
+            <ul class="nav navbar-top-links navbar-right">
+                <li class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                        <img alt="" width="48px" height="48px" class="img-circle" src="/avatars/{{ gebruikerAvatar | default("default.jpg") }}"> {{ gebruikerNaam }} <i class="fa fa-caret-down"></i>
+                    </a>
+                    <ul class="dropdown-menu dropdown-user">
+                        <li><a href="/profile"><i class="fa fa-user fa-fw"></i> Profiel</a>
+                        </li>
+                        <li><a href="/settings"><i class="fa fa-gear fa-fw"></i> Instellingen</a>
+                        </li>
+                        <li class="divider"></li>
+                        <li><a href="/logout"><i class="fa fa-sign-out fa-fw"></i> Uitloggen</a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+
+            <div class="navbar-default sidebar" role="navigation">
+                <div class="sidebar-nav navbar-collapse">
+                    <ul class="nav" id="side-menu">
+                        <li class="sidebar-search">
+                            <form class="input-group custom-search-form" method="POST" action="/search">
+                                <input type="text" class="form-control" placeholder="Zoeken..." name="search">
+                                <span class="input-group-btn">
+                                    <button class="btn btn-default" type="submit">
+                                        <i class="fa fa-search"></i>
+                                    </button>
+                                </span>
+                            </form>
+                        </li>
+                        <li>
+                            <a href="/"><i class="fa fa-dashboard fa-fw"></i> Dashboard</a>
+                        </li>
+                        <li>
+                            <a href="#"><i class="fa fa-database fa-fw"></i> Klanten<span class="fa arrow"></span></a>
+                            <ul class="nav nav-second-level">
+                                <li>
+                                    <a href="/customers/list">Klanten Database</a>
+                                </li>
+                                <li>
+                                    <a href="/customers/create">Nieuw Registreren</a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li>
+                            <a href="#"><i class="fa fa-inbox fa-fw"></i> Incidenten<span class="fa arrow"></span></a>
+                            <ul class="nav nav-second-level">
+                                <li>
+                                    <a href="/tickets/create">Nieuw incident</a>
+                                </li>
+                                <li>
+                                    <a href="/tickets/view/open">Open incidenten</a>
+                                </li>
+                                <li>
+                                    <a href="/tickets/view/closed">Gesloten incidenten</a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li>
+                            <a href="/faq"><i class="fa fa-question-circle fa-fw"></i> FAQ</a>
+                        </li>
+                        <li>
+                            <a href="/stats"><i class="fa fa-bar-chart fa-fw"></i> Statistieken</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper">
+            {% block innerContent %}{% endblock %}
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascript %}
+    <script src="//static.kuubstudios.com/metisMenu-1.1.3/dist/metisMenu.min.js"></script>
+    <script>
+        $(function() {
+            $('#side-menu').metisMenu();
+
+            $(window).bind("load resize", function() {
+                topOffset = 78;
+                width = (this.window.innerWidth > 0) ? this.window.innerWidth : this.screen.width;
+                if (width < 768) {
+                    $('div.navbar-collapse').addClass('collapse');
+                    topOffset = 100; // 2-row-menu
+                } else {
+                    $('div.navbar-collapse').removeClass('collapse');
+                }
+
+                height = ((this.window.innerHeight > 0) ? this.window.innerHeight : this.screen.height) - 1;
+                height = height - topOffset;
+                if (height < 1) height = 1;
+                if (height > topOffset) {
+                    $("#page-wrapper").css("min-height", (height) + "px");
+                }
+            });
+
+            var url = window.location;
+            var element = $('ul.nav a').filter(function() {
+                return this.href == url;
+            }).addClass('active').parent().parent().addClass('in').parent();
+            if (element.is('li')) {
+                element.addClass('active');
+            }
+        });
+
+        {% block innerJavascript %}{% endblock %}
+    </script>
+{% endblock %}

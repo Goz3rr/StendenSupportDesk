@@ -1,0 +1,91 @@
+{% extends "dashboard.twig" %}
+
+{% block title %}FAQ | Stenden Support Desk{% endblock %}
+
+{% block innerContent %}
+    <div class="panel-group" id="accordion-cat">
+        {% if canEdit %}
+            <div class="panel panel-default panel-faq">
+                <div class="panel-heading">
+                    <a data-toggle="collapse" data-parent="#accordion-cat" href="#faq-cat-sub-new">
+                        <h4 class="panel-title">
+                            Nieuwe FAQ aanmaken
+                            <span class="pull-right"><i class="fa fa-plus"></i></span>
+                        </h4>
+                    </a>
+                </div>
+                <div id="faq-cat-sub-new" class="panel-collapse collapse in">
+                    <div class="panel-body">
+                        <form role="form" method="POST" action="/faq/add">
+                            <fieldset>
+                                <div class="form-group">
+                                    <input class="form-control" placeholder="Titel" name="titel" type="text" required>
+                                </div>
+                                <div class="form-group">
+                                    <textarea class="form-control" placeholder="Vraag" name="vraag" required></textarea>
+                                </div>
+                                <div class="form-group">
+                                    <textarea class="form-control" placeholder="Antwoord" name="antwoord" required></textarea>
+                                </div>
+                                <input type="submit" name="submit" class="btn btn-lg btn-success btn-block">
+                            </fieldset>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+        {% for q in entries %}
+            <div class="panel panel-default panel-faq">
+                <div class="panel-heading">
+                    <a data-toggle="collapse" data-parent="#accordion-cat" href="#faq-cat-sub-{{ q.ID }}">
+                        <h4 class="panel-title">
+                            {{ q.Titel }}
+                            <span class="pull-right"><i class="fa fa-chevron-down"></i></span>
+                        </h4>
+                    </a>
+                </div>
+                <div id="faq-cat-sub-{{ q.ID }}" class="panel-collapse collapse">
+                    <div class="panel-body">
+                        {% if canEdit %}
+                            <span class="pull-right">
+                                <a href="#"><i class="fa fa-fw fa-pencil-square-o"></i></a>
+                                <a data-id="{{ q.ID }}" data-toggle="modal" data-target="#confirm-delete" href="#"><i class="fa fa-fw fa-times"></i></a>
+                            </span>
+                        {% endif %}
+                        <p>
+                        <strong>Vraag:</strong><br>
+                        <pre>{{ q.Omschrijving|escape|markdown }}</pre>
+                        </p>
+
+                        <p>
+                        <strong>Antwoord:</strong><br>
+                        <pre>{{ q.Oplossing|escape|markdown }}</pre>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+    <div class="modal fade" id="confirm-delete" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Annuleren</button>
+                    <a href="#" class="btn btn-danger danger">Verwijderen</a>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block innerJavascript %}
+    $('#confirm-delete').on('show.bs.modal', function(e) {
+        var id = $(e.relatedTarget).data('id');
+        $(this).find('.danger').attr('href', '/faq/delete/' + id);
+        $(this).find('.modal-header').text('"' + $('a[href="#faq-cat-sub-'+id+'"]').text().trim() + '" echt verwijderen?');
+    });
+{% endblock %}
