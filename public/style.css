@@ -45,7 +45,7 @@ body {
 }
 
 .navbar-brand {
-    padding: 17px 15px;
+    padding: 15px;
 }
 
 .navbar-top-links {
@@ -218,4 +218,9 @@ body {
 
 .panel-yellow a:hover {
     color: #df8a13;
+}
+
+#accordion-cat, .table {
+    margin-bottom: 0;
+    padding-bottom: 20px;
 }
