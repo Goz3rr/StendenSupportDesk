@@ -8,20 +8,20 @@
 		public static function Create($request, $response, $service) {
 			Auth::CheckLoggedIn();
 
-			return View::Render('createticket');
+			return View::Render('tickets/create');
 		}
 
 		public static function View($request, $response, $service) {
 			Auth::CheckLoggedIn();
 
 			if($request->type == 'open') {
-				return View::Render('opentickets');
+				return View::Render('tickets/list');
 			} elseif($request->type == 'closed') {
-				return View::Render('closedtickets');
+				return View::Render('tickets/list');
 			} elseif($request->type == 'new') {
-				return View::Render('newtickets');
+				return View::Render('tickets/list');
 			} elseif($request->type == 'newreplies') {
-				return View::Render('newticketreplies');
+				return View::Render('tickets/list');
 			}
 		}
 	}

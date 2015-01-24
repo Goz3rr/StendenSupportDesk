@@ -18,7 +18,7 @@
                             <i class="fa fa-comments fa-5x"></i>
                         </div>
                         <div class="col-xs-9 text-right">
-                            <div class="huge">{{ stats.nieuw | default("0") }}</div>
+                            <div class="huge">{{ stats.nieuw|default("0") }}</div>
                             <div>Nieuwe reacties</div>
                         </div>
                     </div>
@@ -40,7 +40,7 @@
                             <i class="fa fa-tasks fa-5x"></i>
                         </div>
                         <div class="col-xs-9 text-right">
-                            <div class="huge">{{ stats.opgelost | default("0") }}</div>
+                            <div class="huge">{{ stats.opgelost|default("0") }}</div>
                             <div>Opgeloste incidenten</div>
                         </div>
                     </div>
@@ -62,7 +62,7 @@
                             <i class="fa fa-inbox fa-5x"></i>
                         </div>
                         <div class="col-xs-9 text-right">
-                            <div class="huge">{{ stats.openstaande | default("0") }}</div>
+                            <div class="huge">{{ stats.openstaande|default("0") }}</div>
                             <div>Openstaande Tickets</div>
                         </div>
                     </div>
@@ -84,7 +84,7 @@
                             <i class="fa fa-asterisk fa-5x"></i>
                         </div>
                         <div class="col-xs-9 text-right">
-                            <div class="huge">{{ stats.onbehandelde | default("0") }}</div>
+                            <div class="huge">{{ stats.onbehandelde|default("0") }}</div>
                             <div>Onbehandelde Tickets</div>
                         </div>
                     </div>
@@ -99,7 +99,7 @@
             </div>
         </div>
     </div>
-
+    <!--
     <div class="row">
         <div class="col-lg-8">
             <div class="panel panel-default">
@@ -125,11 +125,9 @@
                         </div>
                     </div>
                 </div>
-                <!-- /.panel-heading -->
                 <div class="panel-body">
                     <p>Herp Derp</p>
                 </div>
-                <!-- /.panel-body -->
             </div>
         </div>
         <div class="col-lg-4">
@@ -137,7 +135,6 @@
                 <div class="panel-heading">
                     <i class="fa fa-bell fa-fw"></i> Notifications Panel
                 </div>
-                <!-- /.panel-heading -->
                 <div class="panel-body">
                     <div class="list-group">
                         <a href="#" class="list-group-item">
@@ -186,13 +183,12 @@
                             </span>
                         </a>
                     </div>
-                    <!-- /.list-group -->
                     <a href="#" class="btn btn-default btn-block">View All Alerts</a>
                 </div>
-                <!-- /.panel-body -->
             </div>
         </div>
     </div>
+    -->
 {% endblock %}
 
 {% block javascript %}

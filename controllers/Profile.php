@@ -50,17 +50,6 @@
 				}
 
 				$response->redirect('/')->send();
-				/*
-				$password = $_POST['wachtwoord'];
-				$email = $_POST['email'];
-
-				$user=User::Where('UserID', $_SESSION['uid']);
-
-				$user->wachtwoord= password_hash($password, PASSWORD_DEFAULT);
-				$user->Email=$email;
-
-				$response->redirect('/profile')->send();
-				*/
 			} else {
 				$user = User::Get($_SESSION['uid']);
 				return View::Render('profile', array('profiel' => $user));
