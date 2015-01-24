@@ -69,12 +69,16 @@
 		}
 
 		public static function CheckMedewerker() {
+			Auth::CheckLoggedIn();
+			
 			if(!Auth::IsMedewerker()) {
 				die(View::render('error', array('message' => 'Alleen medewerkers van stenden eHelp kunnen dat doen.')));
 			}
 		}
 
 		public static function CheckBeheerder() {
+			Auth::CheckLoggedIn();
+
 			if(!Auth::IsBeheerder()) {
 				die(View::render('error', array('message' => 'Alleen medewerkers van stenden eHelp kunnen dat doen.')));
 			}
