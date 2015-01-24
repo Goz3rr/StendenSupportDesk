@@ -9,11 +9,6 @@
 			}
 
 			$_SESSION['uid'] = $user->ID;
-			$_SESSION['naam'] = $user->Naam;
-
-			if(!empty($user->Foto)) {
-				$_SESSION['foto'] = $user->Foto;
-			}
 
 			return true;
 		}

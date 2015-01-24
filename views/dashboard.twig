@@ -16,7 +16,7 @@
             <ul class="nav navbar-top-links navbar-right">
                 <li class="dropdown">
                     <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                        <img alt="" width="48px" height="48px" class="img-circle" src="/avatars/{{ (gebruikerFoto ~ "?v=" ~ fotoEdit) | default("default.jpg")  }}"> {{ gebruikerNaam }} <i class="fa fa-caret-down"></i>
+                        <img alt="" width="48px" height="48px" class="img-circle" src="/avatars/{{ (gebruiker.Foto|default("default.jpg")) ~ "?v=" ~ fotoEdit }}"> {{ gebruiker.Naam }} <i class="fa fa-caret-down"></i>
                     </a>
                     <ul class="dropdown-menu dropdown-user">
                         <li><a href="/profile"><i class="fa fa-user fa-fw"></i> Profiel</a></li>

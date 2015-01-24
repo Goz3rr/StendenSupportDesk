@@ -22,12 +22,12 @@
 			);
 
 			if(isset($_SESSION['uid'])) {
-				$default['gebruikerUID'] = $_SESSION['uid'];
-				$default['gebruikerNaam'] = $_SESSION['naam'];
+				$user = User::Get($_SESSION['uid']);
 
-				if(isset($_SESSION['foto'])) {
-					$default['gebruikerFoto'] = $_SESSION['foto'];
-					$default['fotoEdit'] = filemtime(BASE_PATH . '/public/avatars/' . $_SESSION['foto']);
+				$default['gebruiker'] = $user;
+
+				if(isset($user->Foto)) {
+					$default['fotoEdit'] = filemtime(BASE_PATH . '/public/avatars/' . $user->Foto);
 				}
 			}
 

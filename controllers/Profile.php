@@ -36,8 +36,6 @@
 							if(move_uploaded_file($_FILES['avatar']['tmp_name'], BASE_PATH . '/public/avatars/' . $file)) {
 								$user->Foto = $file;
 								$user->Save();
-
-								$_SESSION['foto'] = $file;
 							} else {
 								return View::Render('profile', array('profiel' => $user, 'errormsg' => 'Avatar kon niet geupload worden'));
 							}
