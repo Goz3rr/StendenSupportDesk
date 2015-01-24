@@ -29,26 +29,32 @@
                     <div class="panel-body">
                         {% if canEdit %}
                             <span class="pull-right">
-                                <a href="#"><i class="fa fa-fw fa-pencil-square-o"></i></a>
+                                <a onclick="edit({{ q.ID }})" href="#"><i class="fa fa-fw fa-pencil-square-o"></i></a>
                                 <a data-id="{{ q.ID }}" data-toggle="modal" data-target="#confirm-delete" href="#"><i class="fa fa-fw fa-times"></i></a>
                             </span>
                         {% endif %}
-                        <p>
-                        <strong>Vraag:</strong><br>
-                        <pre>{{ q.Omschrijving|escape|markdown }}</pre>
-                        </p>
+                        <form method="POST" action="/faq/update">
+                            <p>
+                                <strong>Vraag:</strong><br>
+                                <pre data-id="{{ q.ID }}" data-raw="{{ q.Omschrijving }}" name="vraag">{{ q.Omschrijving|escape|markdown }}</pre>
+                            </p>
 
-                        <p>
-                        <strong>Antwoord:</strong><br>
-                        <pre>{{ q.Oplossing|escape|markdown }}</pre>
-                        </p>
+                            <p>
+                                <strong>Antwoord:</strong><br>
+                                <pre data-id="{{ q.ID }}" data-raw="{{ q.Oplossing }}" name="antwoord">{{ q.Oplossing|escape|markdown }}</pre>
+                            </p>
+
+                            <input type="hidden" name="id" value="{{ q.ID }}">
+                            <input type="submit" name="submit" class="btn btn-success pull-right" style="display:none" value="Bijwerken">
+                            <a href="/faq" class="btn btn-danger pull-right" style="display:none;margin-right:4px">Annuleren</a>
+                        </form>
                     </div>
                 </div>
             </div>
         {% endfor %}
     </div>
 
-    <div class="modal fade" id="confirm-delete" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal fade" id="confirm-delete" tabindex="-1" role="dialog" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -62,7 +68,7 @@
         </div>
     </div>
 
-    <div class="modal fade" id="create-new" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal fade" id="create-new" tabindex="-1" role="dialog" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <form role="form" method="POST" action="/faq/add">
@@ -98,4 +104,13 @@
         $(this).find('.danger').attr('href', '/faq/delete/' + id);
         $(this).find('.modal-header').text('"' + $('a[href="#faq-cat-sub-'+id+'"]').text().trim() + '" echt verwijderen?');
     });
+
+    function edit(id) {
+        var pre = $('pre[data-id='+id+']');
+        pre.parent().find('input[type="submit"]').css('display', 'inline');
+        pre.parent().find('a[href="/faq"]').css('display', 'inline');
+        pre.replaceWith(function() {
+            return '<textarea class="form-control" style="resize:vertical" rows="5" name="' + $(this).attr('name') + '" required>' + $(this).data('raw') + '</textarea>';
+        });
+    }
 {% endblock %}

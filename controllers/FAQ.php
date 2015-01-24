@@ -47,6 +47,21 @@
 					} else {
 						return View::render('error', array('message' => 'Alle velden moeten worden ingevuld'));
 					}
+				} elseif($request->action == "update") {
+					if(isset($_POST['submit'])) {
+						$id = $_POST['id'];
+						$vraag = trim($_POST['vraag']);
+						$antwoord = trim($_POST['antwoord']);
+
+						if(!empty($vraag) && !empty($antwoord)) {
+							$faq = FAQ::Get($id);
+							$faq->Omschrijving = $vraag;
+							$faq->Oplossing = $antwoord;
+							$faq->Save();
+						}
+					}
+
+					$response->redirect('/faq')->send();
 				}
 			} else {
 				return View::render('error', array('message' => 'Alleen medewerkers van stenden eHelp kunnen dat doen.'));
