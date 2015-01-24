@@ -26,7 +26,11 @@
 
 		public static function CheckLoggedIn() {
 			if(!Auth::IsLoggedIn()) {
-				header('Location: /login');
+				if($_SERVER['REQUEST_URI'] != '' && $_SERVER['REQUEST_URI'] != '/') {
+					header('Location: /login?redirect=' . urlencode($_SERVER['REQUEST_URI']));
+				} else {
+					header('Location: /login');
+				}
 				exit;
 			}
 		}
@@ -70,7 +74,7 @@
 
 		public static function CheckMedewerker() {
 			Auth::CheckLoggedIn();
-			
+
 			if(!Auth::IsMedewerker()) {
 				die(View::render('error', array('message' => 'Alleen medewerkers van stenden eHelp kunnen dat doen.')));
 			}

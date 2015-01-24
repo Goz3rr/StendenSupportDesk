@@ -64,9 +64,19 @@
 					return View::Render('login', array('errormsg' => 'Incorrecte gebruikersnaam of wachtwoord'));
 				}
 
-				$response->redirect('/')->send();
+				$url = isset($_POST['redirect']) ? urldecode($_POST['redirect']) : '/';
+				$response->redirect($url)->send();
 			} else {
-				return View::Render('login');
+				if(Auth::IsLoggedIn()) {
+					$url = isset($_GET['redirect']) ? urldecode($_GET['redirect']) : '/';
+					$response->redirect($url)->send();
+				}
+
+				if(isset($_GET['redirect'])) {
+					return View::Render('login', array('redirect' => $_GET['redirect']));
+				} else {
+					return View::Render('login');
+				}
 			}
 		}
 

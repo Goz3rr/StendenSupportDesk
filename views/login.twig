@@ -11,7 +11,7 @@
                         <h3 class="panel-title">Aanmelden</h3>
                     </div>
                     <div class="panel-body">
-                        {% if errormsg is defined %}
+                        {% if errormsg %}
                             <div class="alert alert-danger">
                                 <a class="close" data-dismiss="alert" href="#">&times;</a>{{ errormsg }}
                             </div>
@@ -30,6 +30,9 @@
                                         <input name="remember" type="checkbox">Gegevens onthouden
                                     </label>
                                 </div>
+                                {% if redirect %}
+                                    <input type="hidden" name="redirect" value="{{ redirect }}">
+                                {% endif %}
                                 <input type="submit" name="submit" class="btn btn-lg btn-success btn-block">
                             </fieldset>
                         </form>
