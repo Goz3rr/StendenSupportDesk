@@ -25,6 +25,9 @@
 				$user = User::Get($_SESSION['uid']);
 
 				$default['gebruiker'] = $user;
+				$default['isMedewerker'] = Auth::IsMedewerker($user);
+				$default['isTeamLeider'] = Auth::IsTeamLeider($user);
+				$default['isBeheerder'] = Auth::IsBeheerder($user);
 
 				if(isset($user->Foto)) {
 					$default['fotoEdit'] = filemtime(BASE_PATH . '/public/avatars/' . $user->Foto);

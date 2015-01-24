@@ -1,0 +1,40 @@
+{% extends "dashboard.twig" %}
+
+{% block title %}Nieuwe klant aanmaken| Stenden Support Desk{% endblock %}
+
+{% block innerContent %}
+    <div class="row">
+        <h2>Nieuwe klant aanmaken</h2>
+        <form role="form" method="POST" action="/login">
+            <fieldset>
+                <legend>Klantgegevens</legend>
+                <div class="form-group">
+                    Bedrijfsnaam
+                    <input class="form-control" placeholder="Bedrijfsnaam" name="bedrijfsnaam" type="text" autofocus>
+                </div>
+                <div class="form-group">
+                    Adres
+                    <input class="form-control" placeholder="Adres" name="adres" type="text">
+                </div>
+                <div class="form-group">
+                    Postcode
+                    <input class="form-control" placeholder="Postcode" name="postcode" type="text">
+                </div>
+                <div class="form-group">
+                    Plaats
+                    <input class="form-control" placeholder="Plaats" name="plaats" type="text">
+                </div>
+                <div class="form-group">
+                    Telefoonnummer
+                    <input class="form-control" placeholder="Telefoonnnummer" name="telefoon" type="text">
+                </div>
+                <div class="form-group">
+                    Emailadres
+                    <input class="form-control" placeholder="Emailadres" name="email" type="text">
+                </div>
+                
+                <input type="submit" name="submit" class="btn btn-lg btn-success btn-block" value="Opslaan">
+            </fieldset>
+        </form>
+    </div>
+{% endblock %}

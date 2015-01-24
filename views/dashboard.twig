@@ -43,17 +43,11 @@
                         <li>
                             <a href="/"><i class="fa fa-dashboard fa-fw"></i> Dashboard</a>
                         </li>
-                        <li>
-                            <a href="#"><i class="fa fa-database fa-fw"></i> Klanten<span class="fa arrow"></span></a>
-                            <ul class="nav nav-second-level">
-                                <li>
-                                    <a href="/customers/list">Klanten Database</a>
-                                </li>
-                                <li>
-                                    <a href="/customers/create">Nieuw Registreren</a>
-                                </li>
-                            </ul>
-                        </li>
+                        {% if isMedewerker %}
+                            <li>
+                                <a href="/customers/list"><i class="fa fa-database fa-fw"></i> Klanten</a>
+                            </li>
+                        {% endif %}
                         <li>
                             <a href="#"><i class="fa fa-inbox fa-fw"></i> Incidenten<span class="fa arrow"></span></a>
                             <ul class="nav nav-second-level">

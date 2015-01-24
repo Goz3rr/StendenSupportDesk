@@ -1,0 +1,37 @@
+{% extends "dashboard.twig" %}
+
+{% block title %}Klanten | Stenden Support Desk{% endblock %}
+
+{% block innerContent %}
+    <div class="row">
+        <h2>Klanten</h2>
+    </div>
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th># ID</th>
+                <th>Naam</th>
+                <th>Adres</th>
+                <th>Telefoon</th>
+                <th>Email</th>
+                <th>Licensie</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% if items %}
+                {% for item in items %}
+                    <tr>
+                        <td>{{ item.BedrijfID }}</td>
+                        <td>{{ item.BedrijfNaam }}</td>
+                        <td>{{ item.Adres }}</td>
+                        <td>{{ item.BedrijfTelefoon }}</td>
+                        <td><a href="mailto:{{ item.BedrijfEmail }}">{{ item.BedrijfEmail }}</a></td>
+                        <td>{{ item.Licensie|raw }}</td>
+                    </tr>
+                {% endfor %}
+            {% else %}
+                <tr><td colspan="7">Geen resultaten gevonden</td></tr>
+            {%  endif %}
+        </tbody>
+    </table>
+{% endblock %}

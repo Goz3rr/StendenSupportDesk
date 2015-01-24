@@ -36,23 +36,47 @@
 		}
 
 		public static function IsTeamLeider($user = null) {
-			if($user == null) $user = $_SESSION['uid'];
+			if($user == null) {
+				if(!Auth::IsLoggedIn()) return false;
+				$user = $_SESSION['uid'];
+			}
+
 			if(is_numeric($user)) $user = User::Where('UserID', $user);
 
 			return $user->BedrijfID == 1 && $user->Functie == 'TeamLeider';
 		}
 
 		public static function IsMedewerker($user = null) {
-			if($user == null) $user = $_SESSION['uid'];
+			if($user == null) {
+				if(!Auth::IsLoggedIn()) return false;
+				$user = $_SESSION['uid'];
+			}
+
 			if(is_numeric($user)) $user = User::Where('UserID', $user);
 
 			return $user->BedrijfID == 1;
 		}
 
 		public static function IsBeheerder($user = null) {
-			if($user == null) $user = $_SESSION['uid'];
+			if($user == null) {
+				if(!Auth::IsLoggedIn()) return false;
+				$user = $_SESSION['uid'];
+			}
+
 			if(is_numeric($user)) $user = User::Where('UserID', $user);
 
 			return $user->BedrijfID == 1 && $user->Functie == 'Beheerder';
+		}
+
+		public static function CheckMedewerker() {
+			if(!Auth::IsMedewerker()) {
+				die(View::render('error', array('message' => 'Alleen medewerkers van stenden eHelp kunnen dat doen.')));
+			}
+		}
+
+		public static function CheckBeheerder() {
+			if(!Auth::IsBeheerder()) {
+				die(View::render('error', array('message' => 'Alleen medewerkers van stenden eHelp kunnen dat doen.')));
+			}
 		}
 	}

@@ -2,6 +2,8 @@
 	error_reporting(E_ALL);
 	ini_set('display_errors', '1');
 
+	ini_set('session.gc_maxlifetime', 86400); // 24 uur
+	session_set_cookie_params(86400);
 	session_start();
 
 	define('BASE_PATH', __DIR__ . '/..');
