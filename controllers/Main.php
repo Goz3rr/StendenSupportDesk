@@ -29,7 +29,7 @@
 					$stats['opgelost'] = $q->fetch(PDO::FETCH_NUM)[0];
 				}
 
-				$q = DB::Query('SELECT COUNT(IncidentID) FROM incident, increactie WHERE IncidentID = IncID AND IncStatus != 'Afgehandeld'');
+				$q = DB::Query("SELECT COUNT(IncidentID) FROM incident, increactie WHERE IncidentID = IncID AND IncStatus != 'Afgehandeld'");
 				if($q) {
 					$stats['openstaande'] = $q->fetch(PDO::FETCH_NUM)[0];
 				}
