@@ -6,7 +6,7 @@
     <div class="row">
         <h2>Klanten</h2>
     </div>
-    <table class="table table-hover">
+    <table id="customertable" class="table table-hover">
         <thead>
             <tr>
                 <th># ID</th>
@@ -34,4 +34,14 @@
             {%  endif %}
         </tbody>
     </table>
+{% endblock %}
+
+{% block innerJavascript %}
+    $(document).ready(function() {
+        $('#customertable').DataTable({
+            'language': {
+                'url': '//static.kuubstudios.com/datatables/1.10.4/dutch.json'
+            }
+        });
+    });
 {% endblock %}
