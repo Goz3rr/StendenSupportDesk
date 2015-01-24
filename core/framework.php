@@ -4,7 +4,7 @@
 
 	session_start();
 
-	define("BASE_PATH", __DIR__ . "/..");
+	define('BASE_PATH', __DIR__ . '/..');
 
 	require_once(BASE_PATH . '/vendor/autoload.php');
 
@@ -25,12 +25,12 @@
 
 	require_once(BASE_PATH . '/controllers/controller.php');
 	foreach(scandir(BASE_PATH . '/controllers') as $ent) {
-		if($ent == "." || $ent == ".." || $ent == "controller.php") continue;
+		if($ent == '.' || $ent == '..' || $ent == 'controller.php') continue;
 
-		if(substr_compare($ent, ".php", -4, 4) === 0) {
+		if(substr_compare($ent, '.php', -4, 4) === 0) {
 			include_once(BASE_PATH . '/controllers/' . $ent);
 
-			$c = substr($ent, 0, -4) . "Controller";
+			$c = substr($ent, 0, -4) . 'Controller';
 			$c::Routes($klein);
 		}
 	}
@@ -43,12 +43,12 @@
 	$klein->respond('GET', '/maakadmin', function() {
 		$bedrijf = new Bedrijf();
 
-		$bedrijf->Naam = "Stenden eHelp";
-		$bedrijf->Adres = "Van Schaikweg 94";
-		$bedrijf->Postcode = "7811KL";
-		$bedrijf->Plaats = "Emmen";
-		$bedrijf->Telefoon = "0591853100";
-		$bedrijf->Email = "receptie.emmen@stenden.com";
+		$bedrijf->Naam = 'Stenden eHelp';
+		$bedrijf->Adres = 'Van Schaikweg 94';
+		$bedrijf->Postcode = '7811KL';
+		$bedrijf->Plaats = 'Emmen';
+		$bedrijf->Telefoon = '0591853100';
+		$bedrijf->Email = 'receptie.emmen@stenden.com';
 
 		$bedrijf->Save();
 

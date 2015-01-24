@@ -31,7 +31,7 @@
 
 		public static function CheckLoggedIn() {
 			if(!Auth::IsLoggedIn()) {
-				header("Location: /login");
+				header('Location: /login');
 				exit;
 			}
 		}
@@ -44,7 +44,7 @@
 			if($user == null) $user = $_SESSION['uid'];
 			if(is_numeric($user)) $user = User::Where('UserID', $user);
 
-			return $user->BedrijfID == 1 && $user->Functie == "TeamLeider";
+			return $user->BedrijfID == 1 && $user->Functie == 'TeamLeider';
 		}
 
 		public static function IsMedewerker($user = null) {
@@ -58,6 +58,6 @@
 			if($user == null) $user = $_SESSION['uid'];
 			if(is_numeric($user)) $user = User::Where('UserID', $user);
 
-			return $user->BedrijfID == 1 && $user->Functie == "Beheerder";
+			return $user->BedrijfID == 1 && $user->Functie == 'Beheerder';
 		}
 	}

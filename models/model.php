@@ -16,7 +16,7 @@
 		}
 
 		public static function GetTable() {
-			return "";
+			return '';
 		}
 
 		public function Load($row) {
@@ -32,37 +32,37 @@
 				$values = array();
 
 				foreach(static::GetMap() as $field => $column) {
-					if($field == "ID" && $this->ID === null) continue;
+					if($field == 'ID' && $this->ID === null) continue;
 
-					array_push($columns, "`" . $column . "`");
-					array_push($placeholders, "?");
+					array_push($columns, '`' . $column . '`');
+					array_push($placeholders, '?');
 					array_push($values, $this->$field);
 				}
 
-				$columns = "(" . implode(", ", $columns) . ")";
-				$placeholders = "(" . implode(", ", $placeholders) . ")";
+				$columns = '(' . implode(', ', $columns) . ')';
+				$placeholders = '(' . implode(', ', $placeholders) . ')';
 
-				$sql = sprintf("INSERT INTO `%s` %s VALUES %s;", static::GetTable(), $columns, $placeholders);
+				$sql = sprintf('INSERT INTO `%s` %s VALUES %s;', static::GetTable(), $columns, $placeholders);
 			} else {
 				$fields = array();
 				$values = array();
 
 				foreach(static::GetMap() as $field => $column) {
-					if($field == "ID" && $this->ID === null) continue;
+					if($field == 'ID' && $this->ID === null) continue;
 
-					array_push($fields, "`" . $column . "` = ?");
+					array_push($fields, '`' . $column . '` = ?');
 					array_push($values, $this->$field);
 				}
 
-				$fields = implode(", ", $fields);
+				$fields = implode(', ', $fields);
 
-				$sql = sprintf("UPDATE %s SET %s WHERE `%s` = %d", static::GetTable(), $fields, static::GetMapKey('ID'), $this->ID);
+				$sql = sprintf('UPDATE %s SET %s WHERE `%s` = %d', static::GetTable(), $fields, static::GetMapKey('ID'), $this->ID);
 			}
 
 			try {
 				return DB::Prepare($sql, $values);
 			} catch(PDOException $ex) {
-				echo "SQL Error: " . $ex->getMessage();
+				echo 'SQL Error: ' . $ex->getMessage();
 			}
 
 			return false;
@@ -71,34 +71,34 @@
 		public function Delete() {
 			if($this->ID == null) return false;
 
-			return DB::Prepare(sprintf("DELETE FROM %s WHERE %s = ?;", static::GetTable(), static::GetMapKey('ID')), $this->ID);
+			return DB::Prepare(sprintf('DELETE FROM %s WHERE %s = ?;', static::GetTable(), static::GetMapKey('ID')), $this->ID);
 		}
 
 		public static function Get($id) {
 			if($id == null) return false;
 
 			try {
-				$q = DB::Prepare(sprintf("SELECT * FROM %s WHERE %s = ?;", static::GetTable(), static::GetMapKey('ID')), $id);
+				$q = DB::Prepare(sprintf('SELECT * FROM %s WHERE %s = ?;', static::GetTable(), static::GetMapKey('ID')), $id);
 
 				if($q) {
 					$ent = new static();
-					$ent->Load($q->fetch(PDO::FETCH_ASSOC));
+					$ent->Load($q->fetch());
 					return $ent;
 				}
 			} catch(PDOException $ex) {
-				echo "SQL Error: " . $ex->getMessage();
+				echo 'SQL Error: ' . $ex->getMessage();
 			}
 
 			return false;
 		}
 
 		public static function GetAll($reversed = false) {
-			$q = DB::Query("SELECT * FROM " . static::GetTable() . " ORDER BY " . static::GetMapKey('ID') . ($reversed ? " DESC" : " ASC"));
+			$q = DB::Query('SELECT * FROM ' . static::GetTable() . ' ORDER BY ' . static::GetMapKey('ID') . ($reversed ? ' DESC' : ' ASC'));
 
 			try {
 				if($q->execute()) {
 					$out = array();
-					while ($row = $q->fetch(PDO::FETCH_ASSOC)) {
+					while ($row = $q->fetch()) {
 						$ent = new static();
 						$ent->Load($row);
 
@@ -107,7 +107,7 @@
 					return $out;
 				}
 			} catch(PDOException $ex) {
-				echo "SQL Error: " . $ex->getMessage();
+				echo 'SQL Error: ' . $ex->getMessage();
 			}
 
 			return false;
@@ -119,11 +119,11 @@
 			} else {
 				if($column == null || $value == null) return false;
 
-				$q = DB::Prepare(sprintf("SELECT * FROM %s WHERE %s = ? LIMIT 1;", static::GetTable(), $column), $value);
+				$q = DB::Prepare(sprintf('SELECT * FROM %s WHERE %s = ? LIMIT 1;', static::GetTable(), $column), $value);
 				
 				if($q && $q->rowCount() > 0) {
 					$ent = new static();
-					$ent->Load($q->fetch(PDO::FETCH_ASSOC));
+					$ent->Load($q->fetch());
 					return $ent;
 				}
 			}

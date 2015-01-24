@@ -56,7 +56,7 @@
 				$password = $_POST['wachtwoord'];
 				$email = $_POST['email'];
 
-				$user=User::Where("UserID",$_SESSION["uid"]);
+				$user=User::Where('UserID', $_SESSION['uid']);
 
 				$user->wachtwoord= password_hash($password, PASSWORD_DEFAULT);
 				$user->Email=$email;

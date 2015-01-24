@@ -12,19 +12,35 @@
 			Auth::CheckLoggedIn();
 
 			$stats = array(
-				"nieuw" => 0,
-				"opgelost" => 0,
-				"openstaande" => 0,
-				"onbehandelde" => 0
+				'nieuw' => 0,
+				'opgelost' => 0,
+				'openstaande' => 0,
+				'onbehandelde' => 0
 			);
 
-			/*
-			try {
-				$q = DB::Query("SELECT ");
+			try { // deze queries kloppen waarschijnlijk niet maar ik heb nog geen testdata
+				$q = DB::Prepare('SELECT COUNT(IncReactieID) FROM incident, increactie WHERE IncidentMedewerker = ? AND IncidentID = IncID AND IncUser != ? AND NOW() > IncReactieDatum');
+				if($q->execute(array($_SESSION['uid'], $_SESSION['uid']))) {
+					$stats['nieuw'] = $q->fetch(PDO::FETCH_NUM)[0];
+				}
+
+				$q = DB::Query("SELECT COUNT(IncidentID) FROM incident, increactie WHERE IncidentID = IncID AND IncStatus = 'Afgehandeld' AND MONTH(IncReactieDatum) = MONTH(NOW())");
+				if($q) {
+					$stats['opgelost'] = $q->fetch(PDO::FETCH_NUM)[0];
+				}
+
+				$q = DB::Query('SELECT COUNT(IncidentID) FROM incident, increactie WHERE IncidentID = IncID AND IncStatus != 'Afgehandeld'');
+				if($q) {
+					$stats['openstaande'] = $q->fetch(PDO::FETCH_NUM)[0];
+				}
+
+				$q = DB::Query('SELECT COUNT(IncidentID) FROM incident WHERE IncidentMedewerker = NULL');
+				if($q) {
+					$stats['onbehandelde'] = $q->fetch(PDO::FETCH_NUM)[0];
+				}
 			} catch(PDOException $ex) {
 				echo 'SQL Error: ' . $ex->getMessage();
 			}
-			*/
 
 			return View::Render('index', array('stats' => $stats));
 		}

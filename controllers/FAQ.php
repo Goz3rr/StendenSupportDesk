@@ -31,7 +31,7 @@
 			Auth::CheckLoggedIn();
 
 			if(Auth::IsMedewerker()) {
-				if($request->action == "add") {
+				if($request->action == 'add') {
 					$titel = trim($_POST['titel']);
 					$vraag = trim($_POST['vraag']);
 					$antwoord = trim($_POST['antwoord']);
@@ -47,7 +47,7 @@
 					} else {
 						return View::render('error', array('message' => 'Alle velden moeten worden ingevuld'));
 					}
-				} elseif($request->action == "update") {
+				} elseif($request->action == 'update') {
 					if(isset($_POST['submit'])) {
 						$id = $_POST['id'];
 						$vraag = trim($_POST['vraag']);

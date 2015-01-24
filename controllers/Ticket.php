@@ -14,13 +14,13 @@
 		public static function View($request, $response, $service) {
 			Auth::CheckLoggedIn();
 
-			if($request->type == "open") {
+			if($request->type == 'open') {
 				return View::Render('opentickets');
-			} elseif($request->type == "closed") {
+			} elseif($request->type == 'closed') {
 				return View::Render('closedtickets');
-			} elseif($request->type == "new") {
+			} elseif($request->type == 'new') {
 				return View::Render('newtickets');
-			} elseif($request->type == "newreplies") {
+			} elseif($request->type == 'newreplies') {
 				return View::Render('newticketreplies');
 			}
 		}
