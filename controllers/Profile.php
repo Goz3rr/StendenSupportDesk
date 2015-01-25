@@ -29,8 +29,8 @@
 
 				if($_FILES['avatar']['error'] == UPLOAD_ERR_OK) {
 					$check = getimagesize($_FILES['avatar']['tmp_name']);
-					$ext = pathinfo(basename($_FILES['avatar']['name']), PATHINFO_EXTENSION);
-					if($check !== false && in_array(strtolower($ext), array('jpg', 'png', 'jpeg', 'gif'))) {
+					$ext = strtolower(pathinfo(basename($_FILES['avatar']['name']), PATHINFO_EXTENSION));
+					if($check !== false && in_array($ext, array('jpg', 'png', 'jpeg', 'gif'))) {
 						if ($_FILES['avatar']['size'] < 2000000) {
 							$file = $_SESSION['uid'] . '.' . $ext;
 							if(move_uploaded_file($_FILES['avatar']['tmp_name'], BASE_PATH . '/public/avatars/' . $file)) {
@@ -40,10 +40,10 @@
 								return View::Render('profile', array('profiel' => $user, 'errormsg' => 'Avatar kon niet geupload worden'));
 							}
 						} else {
-							return View::Render('profile', array('profiel' => $user, 'errormsg' => 'Afbeelding is te groot'));
+							return View::Render('profile', array('profiel' => $user, 'errormsg' => 'Afbeelding is te groot (maximaal 2MB)'));
 						}
 					} else {
-						return View::Render('profile', array('profiel' => $user, 'errormsg' => 'Bestand is geen afbeelding'));
+						return View::Render('profile', array('profiel' => $user, 'errormsg' => 'Bestand is geen afbeelding (png/gif/jpg toegestaan)'));
 					}
 				} elseif($_FILES['avatar']['error'] != UPLOAD_ERR_NO_FILE) {
 					return View::Render('profile', array('profiel' => $user, 'errormsg' => 'Avatar kon niet geupload worden'));

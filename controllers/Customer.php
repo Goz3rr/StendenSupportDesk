@@ -12,28 +12,36 @@
 		public static function View($request, $response, $service) {
 			Auth::CheckMedewerker();
 
-			$q = DB::Query("SELECT BedrijfID, BedrijfNaam, CONCAT(BedrijfAdres, ' ', BedrijfPostcode, ' ', BedrijfPlaats) AS Adres, BedrijfTelefoon, BedrijfEmail FROM bedrijf WHERE BedrijfID > 1");
-			if(!$q) {
-				return View::render('error', array('message' => 'SQL Fout'));
-			}
+			if($request->action == 'list') {
+				$q = DB::Query("SELECT BedrijfID, BedrijfNaam, CONCAT(BedrijfAdres, ' ', BedrijfPostcode, ' ', BedrijfPlaats) AS Adres, BedrijfTelefoon, BedrijfEmail FROM bedrijf WHERE BedrijfID > 1");
+				if(!$q) {
+					return View::render('error', array('message' => 'SQL Fout'));
+				}
 
-			$items = $q->fetchAll();
-			$q = DB::Prepare("SELECT ProductLicentieTot FROM product WHERE ProductKlantID = ? AND Product = 'Helpdesk' ORDER BY ProductLicentieTot DESC LIMIT 1");
+				$items = $q->fetchAll();
+				$q = DB::Prepare("SELECT ProductLicentieTot FROM product WHERE ProductKlantID = ? AND Product = 'Helpdesk' ORDER BY ProductLicentieTot DESC LIMIT 1");
 
-			foreach ($items as $k => $item) {
-				$items[$k]['Licensie'] = '-';
+				foreach ($items as $k => $item) {
+					$items[$k]['Licensie'] = '-';
 
-				if($q->execute(array($item['BedrijfID']))) {
-					if($row = $q->fetch()) {
-						if(strtotime($row['ProductLicentieTot']) > time()) {
-							$items[$k]['Licensie'] = 'geldig tot ' . $row['ProductLicentieTot'];
-						} else {
-							$items[$k]['Licensie'] = '<span class="text-danger">verlopen op ' . $row['ProductLicentieTot'] . '</span>';
+					if($q->execute(array($item['BedrijfID']))) {
+						if($row = $q->fetch()) {
+							if(strtotime($row['ProductLicentieTot']) > time()) {
+								$items[$k]['Licensie'] = 'geldig tot ' . $row['ProductLicentieTot'];
+							} else {
+								$items[$k]['Licensie'] = '<span class="text-danger">verlopen op ' . $row['ProductLicentieTot'] . '</span>';
+							}
 						}
 					}
 				}
-			}
 
-			return View::Render('customers/list', array('items' => $items));
+				return View::Render('customers/list', array('items' => $items));
+			} else {
+				if($request->id == null) {
+					$response->redirect('/customers/list')->send();
+				} else {
+
+				}
+			}
 		}
 	}
