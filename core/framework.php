@@ -38,7 +38,7 @@
 	}
 
 	$klein->onHttpError(function($code, $router) {
-		$router->response()->body('error ' . $code);
+		$router->response()->body('error ' . $code . '<br><a href="/">back to home</a>');
 	});
 
 	/*

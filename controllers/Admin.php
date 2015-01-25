@@ -1,12 +1,19 @@
 <?php
 	class AdminController extends Controller {
 		public static function Routes($klein) {
-			$klein->respond('GET', '/admin', 'AdminController::Index');
+			$klein->respond('GET', '/admin/users', 'AdminController::Users');
 		}
 
-		public static function Index($request, $response, $service) {
+		public static function Users($request, $response, $service) {
 			Auth::CheckBeheerder();
 			
-			return View::Render('admin/index');
+			$q = DB::Query("SELECT UserID, UserNaam, IFNULL(UserTelefoon, BedrijfTelefoon) AS Telefoon, IFNULL(UserEmail, BedrijfEmail) AS Email, BedrijfNaam, UserFunctie, UserAfdeling FROM user, bedrijf WHERE UserBedrijf = BedrijfID");
+			if(!$q) {
+				return View::render('error', array('message' => 'SQL Fout'));
+			}
+
+			$items = $q->fetchAll();
+
+			return View::Render('admin/list', array('items' => $items));
 		}
 	}

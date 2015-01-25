@@ -1,31 +1,33 @@
 {% extends "dashboard.twig" %}
 
-{% block title %}Klanten | Stenden Support Desk{% endblock %}
+{% block title %}Gebruikers | Stenden Support Desk{% endblock %}
 
 {% block innerContent %}
     <div class="row">
-        <h2>Klanten</h2>
+        <h2>Gebruikers</h2>
     </div>
-    <table id="customertable" class="table table-hover">
+    <table id="userstable" class="table table-hover">
         <thead>
             <tr>
                 <th># ID</th>
                 <th>Naam</th>
-                <th>Adres</th>
                 <th>Telefoon</th>
                 <th>Email</th>
-                <th>Licensie</th>
+                <th>Bedrijf</th>
+                <th>Functie</th>
+                <th>Afdeling</th>
             </tr>
         </thead>
         <tbody>
             {% for item in items %}
                 <tr>
-                    <td>{{ item.BedrijfID }}</td>
+                    <td>{{ item.UserID }}</td>
+                    <td>{{ item.UserNaam }}</td>
+                    <td>{{ item.Telefoon|default('-') }}</td>
+                    <td><a href="mailto:{{ item.Email }}">{{ item.Email }}</a></td>
                     <td>{{ item.BedrijfNaam }}</td>
-                    <td>{{ item.Adres }}</td>
-                    <td>{{ item.BedrijfTelefoon }}</td>
-                    <td><a href="mailto:{{ item.BedrijfEmail }}">{{ item.BedrijfEmail }}</a></td>
-                    <td>{{ item.Licensie|raw }}</td>
+                    <td>{{ item.UserFunctie|default('-') }}</td>
+                    <td>{{ item.UserAfdeling|default('-') }}</td>
                 </tr>
             {% endfor %}
         </tbody>
@@ -34,7 +36,7 @@
 
 {% block innerJavascript %}
     $(document).ready(function() {
-        $('#customertable').DataTable({
+        $('#userstable').DataTable({
             'language': {
                 'url': '//static.kuubstudios.com/datatables/1.10.4/dutch.json'
             }

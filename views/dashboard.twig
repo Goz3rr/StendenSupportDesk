@@ -61,8 +61,13 @@
                             <a href="/"><i class="fa fa-dashboard fa-fw"></i> Dashboard</a>
                         </li>
                         {% if isBeheerder %}
-                            <li>
-                                <a href="/admin"><i class="fa fa-cogs fa-fw"></i> Beheer</a>
+                            <li class="dropdown">
+                                <a href="#"><i class="fa fa-cogs fa-fw"></i> Beheer<span class="fa arrow"></span></a>
+                                <ul class="nav nav-second-level">
+                                    <li>
+                                        <a href="/admin/users">Gebruikers</a>
+                                    </li>
+                                </ul>
                             </li>
                         {% endif %}
                         {% if isMedewerker %}
