@@ -35,6 +35,15 @@
 				$bedrijf->Email = $email;
 				$bedrijf->Save();
 
+				$user = new User();
+				$user->Inlog = $email;
+				$user->Wachtwoord = password_hash('banaan', PASSWORD_DEFAULT);
+				$user->Naam = $naam;
+				$user->BedrijfID = $bedrijf->ID;
+				$user->Functie = 'Medewerker';
+				$user->Email = $email;
+				$user->Save();
+
 				$response->redirect('/customers/list')->send();
 			}
 		}

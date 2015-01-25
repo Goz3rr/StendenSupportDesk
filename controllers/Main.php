@@ -39,7 +39,8 @@
 					$stats['onbehandelde'] = $q->fetch(PDO::FETCH_NUM)[0];
 				}
 			} catch(PDOException $ex) {
-				echo 'SQL Error: ' . $ex->getMessage();
+				$message = 'SQL Error: ' . $ex->getMessage();
+				die(View::Error($message));
 			}
 
 			return View::Render('index', array('stats' => $stats));

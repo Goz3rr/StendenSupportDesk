@@ -41,35 +41,5 @@
 	$klein->onHttpError(function($code, $router) {
 		$router->response()->body(View::Error('error ' . $code . '<br><a href="/">back to home</a>', false));
 	});
-
-	/*
-	$klein->respond('GET', '/maakadmin', function() {
-		$bedrijf = new Bedrijf();
-
-		$bedrijf->Naam = 'Stenden eHelp';
-		$bedrijf->Adres = 'Van Schaikweg 94';
-		$bedrijf->Postcode = '7811KL';
-		$bedrijf->Plaats = 'Emmen';
-		$bedrijf->Telefoon = '0591853100';
-		$bedrijf->Email = 'receptie.emmen@stenden.com';
-
-		$bedrijf->Save();
-
-		var_dump($bedrijf);
-
-		$user = new User();
-
-		$user->Inlog = 'admin';
-		$user->Wachtwoord = password_hash('banaan', PASSWORD_DEFAULT);
-		$user->Naam = 'admin';
-		$user->BedrijfID = 1;
-		$user->Functie = 'admin';
-		$user->Email = 'admin@bedrijf.nl';
-
-		$user->Save();
-
-		var_dump($user);
-	});
-	*/
 	
 	$klein->dispatch();

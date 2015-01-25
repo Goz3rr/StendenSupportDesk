@@ -60,9 +60,17 @@
 			}
 
 			try {
-				return DB::Prepare($sql, $values);
+				$q = DB::Prepare($sql);
+				$res = $q->execute($values);
+
+				if($res && $this->ID == null) {
+					$this->ID = DB::$Connection->lastInsertId();
+				}
+
+				return $res;
 			} catch(PDOException $ex) {
-				echo 'SQL Error: ' . $ex->getMessage();
+				$message = 'SQL Error: ' . $ex->getMessage();
+				die(View::Error($message));
 			}
 
 			return false;
@@ -86,7 +94,8 @@
 					return $ent;
 				}
 			} catch(PDOException $ex) {
-				echo 'SQL Error: ' . $ex->getMessage();
+				$message = 'SQL Error: ' . $ex->getMessage();
+				die(View::Error($message));
 			}
 
 			return false;
@@ -107,7 +116,8 @@
 					return $out;
 				}
 			} catch(PDOException $ex) {
-				echo 'SQL Error: ' . $ex->getMessage();
+				$message = 'SQL Error: ' . $ex->getMessage();
+				die(View::Error($message));
 			}
 
 			return false;
