@@ -42,5 +42,48 @@
 	$klein->onHttpError(function($code, $router) {
 		$router->response()->body(View::Error('error ' . $code . '<br><a href="/">back to home</a>', false));
 	});
+
+	$klein->respond('GET', '/test', function() {
+		/*
+		$arr = array(
+			array('Marloes', 'van Dam'),
+			array('Sieuwke', 'Blankenstijn'),
+			array('Seren', 'Koole'),
+			array('Silva', 'Koppers'),
+			array('Bob', 'de Jager'),
+			array('Milos', 'van der Waardt'),
+			array('Wesley', 'Schenk'),
+			array('Justine', 'Duindam')
+		);
+
+		foreach ($arr as $p) {
+			$tmp = str_replace(' ', '', strtolower($p[0][0] . $p[1]));
+
+			$user = new User();
+			$user->Inlog = $tmp;
+			$user->Wachtwoord = password_hash('banaan', PASSWORD_DEFAULT);
+			$user->BedrijfID = 1;
+			$user->Naam = $p[0] . ' ' . $p[1];
+			$user->Functie = 'Medewerker';
+			$user->Email = $tmp . '@bedrijf.nl';
+			$user->Save();
+		}
+		*/
+		/*
+		$q = DB::Query('SELECT * FROM bedrijf WHERE BedrijfID > 1 AND BedrijfID NOT IN (SELECT DISTINCT UserBedrijf FROM user)');
+		if($q->execute()) {
+			while($row = $q->fetch()) {
+				$user = new User();
+				$user->Inlog = $row['BedrijfEmail'];
+				$user->Wachtwoord = password_hash('banaan', PASSWORD_DEFAULT);
+				$user->BedrijfID = $row['BedrijfID'];
+				$user->Naam = $row['BedrijfNaam'];
+				$user->Functie = 'Medewerker';
+				$user->Email = $row['BedrijfEmail'];
+				$user->Save();
+			}
+		}
+		*/
+	});
 	
 	$klein->dispatch();
