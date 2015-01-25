@@ -35,14 +35,23 @@
 				$bedrijf->Email = $email;
 				$bedrijf->Save();
 
+				$pass = Auth::MakePassword();
+
 				$user = new User();
 				$user->Inlog = $email;
-				$user->Wachtwoord = password_hash('banaan', PASSWORD_DEFAULT);
+				$user->Wachtwoord = password_hash($pass, PASSWORD_DEFAULT);
 				$user->Naam = $naam;
 				$user->BedrijfID = $bedrijf->ID;
 				$user->Functie = 'Medewerker';
 				$user->Email = $email;
 				$user->Save();
+
+				$body = sprintf('<html><body>Hierbij uw inlog gegevens:<br><p><strong>Naam:</strong> %s<br><strong>Wachtwoord:</strong> %s</p></body></html>', $email, $pass);
+
+				$ok = Mail::Send($email, 'Uw account is aangemaakt', $body);
+				if(!$ok) {
+					return View::Error('Mail kon niet verstuurd worden!');
+				}
 
 				$response->redirect('/customers/list')->send();
 			}

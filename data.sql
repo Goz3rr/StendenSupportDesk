@@ -7,7 +7,8 @@ INSERT INTO bedrijf (BedrijfID, BedrijfNaam, BedrijfAdres, BedrijfPostcode, Bedr
 (6, 'B1000 Sexbierum', 'De buorren 6', '9289RK', 'Sexbierum', '0512586548', 'sexbierum@B1000.nl'),
 (7, 'Klusbedrijf G. Ploertsma', 'Op ''e Dyk 25', '8915ZM', 'Mooie Paal', '4558662245', 'gurbe@live.nl'),
 (8, 'Hoveniersbedrijf Moddersma', 'Zandlaan 15', '5687DF', 'Tuindorp', '2548752145', 'gerko@12move.nl'),
-(9, 'Klootschietvereniging Het Balletje', 'De Lange Baan 16', '9658QW', 'Staphorst', '2547855455', 'schietmoarraak@hetballetje.org');
+(9, 'Klootschietvereniging Het Balletje', 'De Lange Baan 16', '9658QW', 'Staphorst', '2547855455', 'schietmoarraak@hetballetje.org'),
+(10, 'De Matraskoning', 'Slaaplaan 5', '3131GV', 'Apeldoorn', '0125678145', 'info@matraskoning.nl');
 
 INSERT INTO product (Product, ProductAanschaf, ProductLicentieTot, ProductKlantID) VALUES
 ('FinSoft', '2014-03-05', '2015-03-05', 2),

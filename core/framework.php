@@ -13,6 +13,7 @@
 	require_once(BASE_PATH . '/core/sql.php');
 	require_once(BASE_PATH . '/core/auth.php');
 	require_once(BASE_PATH . '/core/validate.php');
+	require_once(BASE_PATH . '/core/mail.php');
 
 	require_once(BASE_PATH . '/models/model.php');
 	require_once(BASE_PATH . '/models/bedrijf.php');

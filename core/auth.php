@@ -1,5 +1,16 @@
 <?php
 	class Auth {
+		public static function MakePassword($length = 5) {
+			$source = 'abcdefghijklmnopqrstuwxyzABCDEFGHIJKLMNOPQRSTUWXYZ0123456789';
+			$sourceLen = strlen($source) - 1;
+
+			$pass = '';
+			for ($i = 0; $i < $sourceLen; $i++) {
+				$pass .= $source[rand(0, $sourceLen)];
+			}
+			return $pass;
+		}
+
 		public static function LogIn($username, $password, $remember) {
 			if(isset($_SESSION['uid'])) return;
 
