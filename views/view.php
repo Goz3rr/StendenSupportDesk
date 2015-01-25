@@ -37,6 +37,13 @@
 			$args = array_merge($default, $args);
 			return self::$twig->render($file, $args);
 		}
+
+		public static function Error($message, $return = true) {
+			if($return && isset($_SERVER['HTTP_REFERER'])) {
+				$message = $message . '<br><br><a href="' . $_SERVER['HTTP_REFERER'] . '">terug naar vorige pagina</a>';
+			}
+			return self::Render('error', array('message' => $message));
+		}
 	}
 
 	View::Init();

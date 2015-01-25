@@ -9,7 +9,7 @@
 			
 			$q = DB::Query("SELECT UserID, UserNaam, IFNULL(UserTelefoon, BedrijfTelefoon) AS Telefoon, IFNULL(UserEmail, BedrijfEmail) AS Email, BedrijfNaam, UserFunctie, UserAfdeling FROM user, bedrijf WHERE UserBedrijf = BedrijfID");
 			if(!$q) {
-				return View::render('error', array('message' => 'SQL Fout'));
+				return View::Error('SQL Fout');
 			}
 
 			$items = $q->fetchAll();

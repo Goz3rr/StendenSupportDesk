@@ -76,7 +76,7 @@
 			Auth::CheckLoggedIn();
 
 			if(!Auth::IsMedewerker()) {
-				die(View::render('error', array('message' => 'Alleen medewerkers van stenden eHelp kunnen dat doen.')));
+				die(View::Error('Alleen medewerkers van stenden eHelp kunnen dat doen.'));
 			}
 		}
 
@@ -84,7 +84,7 @@
 			Auth::CheckLoggedIn();
 
 			if(!Auth::IsBeheerder()) {
-				die(View::render('error', array('message' => 'Alleen medewerkers van stenden eHelp kunnen dat doen.')));
+				die(View::Error('Alleen beheerders kunnen dat doen.'));
 			}
 		}
 	}

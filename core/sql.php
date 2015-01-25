@@ -18,7 +18,7 @@
 				return self::$Connection->query($sql);
 			} catch(PDOException $ex) {
 				$message = 'Kon query niet uitvoeren: ' . $ex->getMessage();
-				die(View::render('error', array('message' => $message)));
+				die(View::Error($message));
 			}
 
 			return false;
@@ -42,7 +42,7 @@
 				return $sth;
 			} catch(PDOException $ex) {
 				$message = 'Kon prepare niet uitvoeren: ' . $ex->getMessage();
-				die(View::render('error', array('message' => $message)));
+				die(View::Error($message));
 			}
 
 			return false;
@@ -53,5 +53,5 @@
 		DB::Connect();
 	} catch(PDOException $ex) {
 		$message = 'Kan geen verbinding met de database maken: ' . $ex->getMessage();
-		die(View::render('error', array('message' => $message)));
+		die(View::Error($message));
 	}

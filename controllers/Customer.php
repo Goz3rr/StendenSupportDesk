@@ -6,16 +6,46 @@
 		}
 
 		public static function Create($request, $response, $service) {
-			Auth::CheckLoggedIn();
+			Auth::CheckBeheerder();
+
+			$naam = trim($_POST['naam']);
+			$adres = trim($_POST['adres']);
+			$postcode = str_replace(' ', '', $_POST['postcode']);
+			$plaats = trim($_POST['plaats']);
+			$telefoon = trim($_POST['telefoon']);
+			$email = trim($_POST['email']);
+
+			if(empty($naam) || empty($adres) || empty($postcode) || empty($plaats) || empty($telefoon) || empty($email)) {
+				return View::Error('Alle velden moeten worden ingevuld');
+			} else {
+				if(!Validate::Email($email)) {
+					return View::Error('Ongeldig email adres');
+				}
+
+				if(!Validate::Postcode($postcode)) {
+					return View::Error('Ongeldige postcode');
+				}
+
+				$bedrijf = new Bedrijf();
+				$bedrijf->Naam = $naam;
+				$bedrijf->Adres = $adres;
+				$bedrijf->Postcode = $postcode;
+				$bedrijf->Plaats = $plaats;
+				$bedrijf->Telefoon = $telefoon;
+				$bedrijf->Email = $email;
+				$bedrijf->Save();
+
+				$response->redirect('/customers/list')->send();
+			}
 		}
 
 		public static function View($request, $response, $service) {
 			Auth::CheckMedewerker();
 
 			if($request->action == 'list') {
-				$q = DB::Query("SELECT BedrijfID, BedrijfNaam, CONCAT(BedrijfAdres, ' ', BedrijfPostcode, ' ', BedrijfPlaats) AS Adres, BedrijfTelefoon, BedrijfEmail FROM bedrijf WHERE BedrijfID > 1");
+				$q = DB::Query("SELECT BedrijfID, BedrijfNaam, BedrijfAdres, BedrijfPostcode, BedrijfPlaats, BedrijfTelefoon, BedrijfEmail FROM bedrijf WHERE BedrijfID > 1");
 				if(!$q) {
-					return View::render('error', array('message' => 'SQL Fout'));
+					return View::Error('SQL Fout');
 				}
 
 				$items = $q->fetchAll();
@@ -40,7 +70,7 @@
 				if($request->id == null) {
 					$response->redirect('/customers/list')->send();
 				} else {
-
+					// specifieke klant
 				}
 			}
 		}

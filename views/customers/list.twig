@@ -4,8 +4,16 @@
 
 {% block innerContent %}
     <div class="row">
-        <h2>Klanten</h2>
+        <div class="col-lg-11">
+            <h2 class="page-header">Klanten</h2>
+        </div>
+        {% if isBeheerder %}
+            <div class="col-lg-1">
+                <h2 class="page-header" style="text-align:right"><a data-toggle="modal" data-target="#create-new" href="#"><i class="fa fa-fw fa-plus"></i></a></h2>
+            </div>
+        {% endif %}
     </div>
+
     <table id="customertable" class="table table-hover">
         <thead>
             <tr>
@@ -22,14 +30,78 @@
                 <tr>
                     <td>{{ item.BedrijfID }}</td>
                     <td>{{ item.BedrijfNaam }}</td>
-                    <td>{{ item.Adres }}</td>
-                    <td>{{ item.BedrijfTelefoon }}</td>
-                    <td><a href="mailto:{{ item.BedrijfEmail }}">{{ item.BedrijfEmail }}</a></td>
+                    <td>
+                        {{ item.BedrijfAdres }}<br>
+                        {{ item.BedrijfPostcode }} {{ item.BedrijfPlaats }}
+                    </td>
+                    <td><a href="tel:{{ item.BedrijfTelefoon }}">{{ item.BedrijfTelefoon }}</a></td>
+                    <td><a target="_blank" href="mailto:{{ item.BedrijfEmail }}">{{ item.BedrijfEmail }}</a></td>
                     <td>{{ item.Licensie|raw }}</td>
                 </tr>
             {% endfor %}
         </tbody>
     </table>
+
+    {% if isBeheerder %}
+        <div class="modal fade" id="create-new" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <form role="form" class="form-horizontal" method="POST" action="/customers/create">
+                        <div class="modal-header">
+                            Klant Toevoegen
+                        </div>
+                        <div class="modal-body">
+                            <fieldset>
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label" for="textinput">Naam</label>
+                                    <div class="col-sm-10">
+                                        <input type="text" placeholder="Bedrijfsnaam" name="naam" class="form-control" required>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label" for="textinput">Adres</label>
+                                    <div class="col-sm-10">
+                                        <input type="text" placeholder="Straat huisnummer" name="adres" class="form-control" required>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label" for="textinput">Postcode</label>
+                                    <div class="col-sm-4">
+                                        <input type="text" placeholder="Postcode" name="postcode" class="form-control" maxlength="7" required>
+                                    </div>
+
+                                    <label class="col-sm-2 control-label" for="textinput">Plaats</label>
+                                    <div class="col-sm-4">
+                                        <input type="text" placeholder="Plaats" name="plaats" class="form-control" required>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label" for="textinput">Telefoon</label>
+                                    <div class="col-sm-10">
+                                        <input type="tel" placeholder="Telefoon nummer" name="telefoon" class="form-control" required>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label" for="textinput">Email</label>
+                                    <div class="col-sm-10">
+                                        <input type="email" placeholder="Email adres" name="email" class="form-control" required>
+                                    </div>
+                                </div>
+                            </fieldset>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Annuleren</button>
+                            <input type="submit" name="submit" class="btn btn-success" value="Toevoegen">
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    {% endif %}
 {% endblock %}
 
 {% block innerJavascript %}

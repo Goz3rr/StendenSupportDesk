@@ -37,7 +37,7 @@
 					
 					$response->redirect('/faq')->send();
 				} else {
-					return View::render('error', array('message' => 'Alle velden moeten worden ingevuld'));
+					return View::Error('Alle velden moeten worden ingevuld');
 				}
 			} elseif($request->action == 'update') {
 				if(isset($_POST['submit'])) {

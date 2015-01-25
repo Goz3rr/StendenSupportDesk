@@ -12,6 +12,7 @@
 
 	require_once(BASE_PATH . '/core/sql.php');
 	require_once(BASE_PATH . '/core/auth.php');
+	require_once(BASE_PATH . '/core/validate.php');
 
 	require_once(BASE_PATH . '/models/model.php');
 	require_once(BASE_PATH . '/models/bedrijf.php');
@@ -38,7 +39,7 @@
 	}
 
 	$klein->onHttpError(function($code, $router) {
-		$router->response()->body('error ' . $code . '<br><a href="/">back to home</a>');
+		$router->response()->body(View::Error('error ' . $code . '<br><a href="/">back to home</a>', false));
 	});
 
 	/*
