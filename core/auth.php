@@ -1,12 +1,12 @@
 <?php
 	class Auth {
 		public static function MakePassword($length = 5) {
-			$source = 'abcdefghijklmnopqrstuwxyzABCDEFGHIJKLMNOPQRSTUWXYZ0123456789';
-			$sourceLen = strlen($source) - 1;
+			$chars = 'abcdefghijklmnopqrstuwxyzABCDEFGHIJKLMNOPQRSTUWXYZ0123456789';
+			$max = strlen($chars) - 1;
 
 			$pass = '';
-			for ($i = 0; $i < $sourceLen; $i++) {
-				$pass .= $source[rand(0, $sourceLen)];
+			for ($i = 0; $i < $length; $i++) {
+				$pass .= $chars[mt_rand(0, $max)];
 			}
 			return $pass;
 		}
