@@ -3,5 +3,71 @@
 {% block title %}Ticket | Stenden Support Desk{% endblock %}
 
 {% block innerContent %}
-    godverdomme stijn
+    <div class="row">
+        <h2>
+            Incident: {{ incident.Titel }}
+            <span class="label {{ colors.Type[incident.Type]|default("label-default") }}">{{ incident.Type }}</span>
+            <span class="label {{ colors.Prio[incident.Prioriteit]|default("label-default") }}">{{ incident.Prioriteit }}</span>
+        </h2>
+    </div>
+
+    <div class="row">
+        <div class="col-md-8 col-md-offset-2">
+            <ul class="chat">
+                {% for reply in replies %}
+                    {% set side = reply.UserBedrijf == 1 ? "right" : "left" %}
+                    <li class="{{ side }} clearfix">
+                        <span class="chat-img pull-{{ side }}">
+                            <img alt="" width="48px" height="48px" class="img-circle" src="/avatars/{{ (reply.UserFoto|default("default.jpg")) ~ "?v=" ~ now|date('U') }}">
+                        </span>
+                        <div class="chat-body clearfix">
+                            <div class="header">
+                                <strong class="{{ reply.UserBedrijf == 1 ? "pull-right " : "" }}primary-font">{{ reply.UserNaam }}</strong>
+                                <small class="{{ reply.UserBedrijf == 1 ? "" : "pull-right " }}text-muted">
+                                    <i class="fa fa-clock-o fa-fw"></i> <time class="moment" datetime="{{ reply.IncReactieDatum }}">{{ reply.IncReactieDatum }}</time>
+                                </small>
+                            </div>
+                            <p>
+                                {{ reply.IncReactie|escape|markdown|nl2br }}
+                            </p>
+                        </div>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-9 col-md-offset-1">
+            <form class="form-horizontal" role="form" method="POST" action="/tickets/reply/{{ incident.ID }}" style="margin-top:40px">
+                <fieldset>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label" for="textinput">Reactie</label>
+                        <div class="col-sm-10">
+                            <textarea type="text" placeholder="Reactie" name="reactie" class="form-control" style="resize:vertical" rows="6" required></textarea>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label" for="textinput">Status aanpassen</label>
+                        <div class="col-sm-4">
+                            <select name="newstatus" class="form-control" value="{{ replies|last.IncStatus }}">
+                                <option value="Open">Open</option>
+                                <option value="In behandeling">In behandeling</option>
+                                <option value="Afgehandeld">Afgehandeld</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="col-sm-offset-2 col-sm-10">
+                            <div class="pull-right">
+                                <button type="submit" class="btn btn-primary">Toevoegen</button>
+                            </div>
+                        </div>
+                    </div>
+                </fieldset>
+            </form>
+        </div>
+    </div>
 {% endblock %}

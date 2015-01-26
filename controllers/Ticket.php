@@ -2,7 +2,54 @@
 	class TicketController extends Controller {
 		public static function Routes($klein) {
 			$klein->respond(array('GET', 'POST'), '/tickets/create', 'TicketController::Create');
+			$klein->respond('POST', '/tickets/reply/[i:id]', 'TicketController::Reply');
 			$klein->respond('GET', '/tickets/view/[open|closed|new|newreplies:type]?/[i:id]?', 'TicketController::View');
+		}
+
+		public static function Reply($request, $response, $service) {
+			Auth::CheckLoggedIn();
+
+			$user = User::Get($_SESSION['uid']);
+
+			$id = $request->id;
+			if(empty($id)) {
+				return $response->redirect('/tickets/view/open')->send();
+			}
+
+			$reactie = trim($_POST['reactie']);
+			if(empty($reactie)) {
+				return View::Error('Alle velden moeten worden ingevuld');
+			}
+
+			$q = DB::Prepare("SELECT IncStatus FROM increactie WHERE IncID = ? ORDER BY IncReactieID DESC LIMIT 1", array($id));
+			$curStatus = $q->fetch()['IncStatus'];
+
+			if(in_array($_POST['newstatus'], array('Open', 'In behandeling', 'Afgehandeld'))) {
+				$status = $_POST['newstatus'];
+			} else {
+				$status = $curStatus;
+			}
+
+			if($status != $curStatus) {
+				$reactie = $reactie . "  \n\nStatus aangepast naar: **" . $status . '**';
+			}
+
+			$q = DB::Prepare("SELECT UserBedrijf FROM increactie, user WHERE IncUser = UserID AND IncID = ? GROUP BY IncID", array($request->id));
+			$r = $q->fetch();
+
+			if(Auth::IsMedewerker() || $user->Bedrijf == $r['UserBedrijf']) {
+				$reply = new Reactie();
+				$reply->User = $_SESSION['uid'];
+				$reply->Reactie = $reactie;
+				$reply->Datum = date('Y-m-d H:i:s');
+				$reply->Status = $status;
+				$reply->IncidentID = $request->id;
+				$reply->Save();
+
+				return $response->redirect('/tickets/view/' . $id)->send();
+			} else {
+				return View::Error('geen toegang tot dat incident');
+			}
 		}
 
 		public static function Create($request, $response, $service) {
@@ -47,7 +94,7 @@
 					$msg->IncidentID = $inc->ID;
 					$msg->Save();
 
-					$response->redirect('/login')->send();
+					$response->redirect('/tickets/view/' . $inc->ID)->send();
 				}
 			} else {
 				return View::Render('tickets/create');
@@ -57,24 +104,41 @@
 		public static function View($request, $response, $service) {
 			Auth::CheckLoggedIn();
 
+			$colors = array(
+				'Prio' => array(
+					'Laag' => 'label-success',
+					'Gemiddeld' => 'label-warning',
+					'Hoog' => 'label-danger'
+				),
+				'Type' => array(
+					'Vraag' => 'label-primary',
+					'Verzoek' => 'label-success',
+					'Incident' => 'label-danger',
+					'Functioneel Probleem' => 'label-warning',
+					'Technisch Probleem' => 'label-warning'
+				)
+			);
+
 			if(empty($request->type)) {
-				return 'hi';
+				if(empty($request->id)) {
+					$response->redirect('/tickets/view/open')->send();
+				}
+
+				$incident = Incident::Get($request->id);
+				if(!$incident) {
+					return View::Error('Dat incident bestaat niet');
+				}
+
+				$q = DB::Prepare("SELECT IncReactie, IncReactieDatum, IncStatus, UserNaam, UserBedrijf, UserFoto FROM increactie, user WHERE IncUser = UserID AND IncID = ?", array($request->id));
+				$replies = $q->fetchAll();
+
+				return View::Render('tickets/view', array(
+					'incident' => $incident,
+					'replies' => $replies,
+					'colors' => $colors
+				));
 			} else {
-				$items = array(
-					'PrioColors' => array(
-						'Laag' => 'label-success',
-						'Gemiddeld' => 'label-warning',
-						'Hoog' => 'label-danger'
-					),
-					'TypeColors' => array(
-						'Vraag' => 'label-primary',
-						'Verzoek' => 'label-success',
-						'Incident' => 'label-danger',
-						'Functioneel Probleem' => 'label-warning',
-						'Technisch Probleem' => 'label-warning'
-					),
-					'Values' => array()
-				);
+				$items = array();
 
 				if($request->type == 'open') {
 					$titel = 'Openstaande Incidenten';
@@ -86,12 +150,12 @@
 							(SELECT UserNaam FROM user WHERE UserID = I.IncidentMedewerker) AS MedewerkerNaam
 							FROM
 								incident I,
-								(SELECT * FROM increactie WHERE IncStatus = 'Open' ORDER BY IncReactieID ASC) AS FirstReactie,
-								(SELECT * FROM increactie WHERE IncStatus = 'Open' ORDER BY IncReactieID DESC) AS LastReactie
+								(SELECT * FROM increactie ORDER BY IncReactieID ASC) AS FirstReactie,
+								(SELECT * FROM increactie ORDER BY IncReactieID DESC) AS LastReactie
 							WHERE IncidentID = LastReactie.IncID AND IncidentID = FirstReactie.IncID AND LastReactie.IncStatus != 'Afgehandeld' GROUP BY IncidentID
 						");
 
-						$items['Values'] = $q->fetchAll();
+						$items = $q->fetchAll();
 					} else {
 						$q = DB::Prepare("SELECT I.*, FirstReactie.IncUser AS StartUser, FirstReactie.IncReactieDatum AS StartDatum,
 							LastReactie.IncUser AS LastUser, LastReactie.IncReactieDatum AS LastDatum, LastReactie.IncStatus AS Status,
@@ -104,7 +168,7 @@
 							WHERE IncidentID = LastReactie.IncID AND IncidentID = FirstReactie.IncID AND LastReactie.IncStatus != 'Afgehandeld' AND FirstReactie.IncUser = ? GROUP BY IncidentID
 						", array($_SESSION['uid']));
 
-						$items['Values'] = $q->fetchAll();
+						$items = $q->fetchAll();
 					}
 				} elseif($request->type == 'closed') {
 					$titel = 'Afgesloten Incidenten';
@@ -121,7 +185,7 @@
 							WHERE IncidentID = LastReactie.IncID AND IncidentID = FirstReactie.IncID AND LastReactie.IncStatus = 'Afgehandeld' GROUP BY IncidentID
 						");
 
-						$items['Values'] = $q->fetchAll();
+						$items = $q->fetchAll();
 					} else {
 						$q = DB::Prepare("SELECT I.*, FirstReactie.IncUser AS StartUser, FirstReactie.IncReactieDatum AS StartDatum,
 							LastReactie.IncUser AS LastUser, LastReactie.IncReactieDatum AS LastDatum, LastReactie.IncStatus AS Status,
@@ -134,7 +198,7 @@
 							WHERE IncidentID = LastReactie.IncID AND IncidentID = FirstReactie.IncID AND LastReactie.IncStatus = 'Afgehandeld' AND FirstReactie.IncUser = ? GROUP BY IncidentID
 						", array($_SESSION['uid']));
 
-						$items['Values'] = $q->fetchAll();
+						$items = $q->fetchAll();
 					}
 				} elseif($request->type == 'new') {
 					Auth::CheckMedewerker();
@@ -151,7 +215,7 @@
 						WHERE IncidentID = LastReactie.IncID AND IncidentID = FirstReactie.IncID AND IncidentMedewerker IS NULL GROUP BY IncidentID
 					");
 
-					$items['Values'] = $q->fetchAll();
+					$items = $q->fetchAll();
 				} elseif($request->type == 'newreplies') {
 					$titel = 'Incidenten met nieuwe reacties';
 				}
@@ -160,13 +224,15 @@
 					return View::Render('tickets/list_all', array(
 							'type' => $request->type,
 							'titel' => $titel,
-							'items' => $items
+							'items' => $items,
+							'colors' => $colors
 						));
 				} else {
 					return View::Render('tickets/list', array(
 						'type' => $request->type,
 						'titel' => $titel,
-						'items' => $items
+						'items' => $items,
+						'colors' => $colors
 					));
 				}
 			}

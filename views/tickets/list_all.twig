@@ -11,18 +11,18 @@
             <tr><th># ID</th><th>Titel</th><th>Lijn</th><th>Klant</th><th>Medewerker</th><th>Laatste reactie</th></tr>
         </thead>
         <tbody>
-            {% for item in items.Values %}
+            {% for item in items %}
                 <tr>
                     <td>{{ item.IncidentID }}</td>
                     <td>
                         {{ item.IncidentTitel }}
-                        <span class="label {{ items.TypeColors[item.IncidentType]|default("label-default") }}">{{ item.IncidentType }}</span>
-                        <span class="label {{ items.PrioColors[item.IncidentPrioriteit]|default("label-default") }}">{{ item.IncidentPrioriteit }}</span>
+                        <span class="label {{ colors.Type[item.IncidentType]|default("label-default") }}">{{ item.IncidentType }}</span>
+                        <span class="label {{ colors.Prio[item.IncidentPrioriteit]|default("label-default") }}">{{ item.IncidentPrioriteit }}</span>
                     </td>
                     <td>{{ item.IncidentLijn }}</td>
-                    <td>{{ item.KlantNaam }}</td>
+                    <td><a href="/customers/view/{{ item.StartUser }}">{{ item.KlantNaam }}</a></td>
                     <td>{{ item.MedewerkerNaam|default("-") }}</td>
-                    <td>{{ item.LastDatum }}</td>
+                    <td><time datetime="{{ item.LastDatum }}">{{ item.LastDatum }}</time></td>
                 </tr>
             {% endfor %}
         </tbody>

@@ -224,3 +224,27 @@ body {
     margin-bottom: 0;
     padding-bottom: 20px;
 }
+
+.chat {
+    margin: 40px 0 0 0;
+    padding: 0;
+    list-style: none;
+}
+
+.chat li {
+    margin-bottom: 15px;
+    padding-bottom: 15px;
+    border-bottom: 1px dotted #999;
+}
+
+.chat li.left .chat-body {
+    margin-left: 60px;
+}
+
+.chat li.right .chat-body {
+    margin-right: 60px;
+}
+
+.chat li .chat-body p {
+    margin: 0;
+}
