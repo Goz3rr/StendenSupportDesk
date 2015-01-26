@@ -39,8 +39,8 @@
 		}
 
 		public static function Error($message, $return = true) {
-			if($return && isset($_SERVER['HTTP_REFERER'])) {
-				$message = $message . '<br><br><a href="' . $_SERVER['HTTP_REFERER'] . '">terug naar vorige pagina</a>';
+			if($return) {
+				$message = $message . '<br><br><a href="javascript:history.back()">terug naar vorige pagina</a>';
 			}
 			return self::Render('error', array('message' => $message));
 		}

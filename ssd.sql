@@ -57,8 +57,9 @@ CREATE TABLE IF NOT EXISTS `faq` (
 
 CREATE TABLE IF NOT EXISTS `incident` (
 `IncidentID` int(11) NOT NULL,
+  `IncidentTitel` varchar(255) NOT NULL,
   `IncidentType` enum('Vraag','Verzoek','Incident','Functioneel Probleem','Technisch Probleem') NOT NULL,
-  `IncidentKanaal` enum('Telefoon','Email') NOT NULL,
+  `IncidentKanaal` enum('Telefoon','Email','Ticket') NOT NULL,
   `IncidentLijn` tinyint(4) NOT NULL DEFAULT '1',
   `IncidentPrioriteit` enum('Laag','Gemiddeld','Hoog') NOT NULL,
   `IncidentMedewerker` int(11) DEFAULT NULL,
@@ -76,7 +77,7 @@ CREATE TABLE IF NOT EXISTS `increactie` (
   `IncUser` int(11) NOT NULL,
   `IncReactie` text NOT NULL,
   `IncReactieDatum` datetime NOT NULL,
-  `IncStatus` enum('Open','In behandeling','Afgehandeld') NOT NULL DEFAULT 'Open',
+  `IncStatus` enum('Open','In behandeling','Afgehandeld') NOT NULL,
   `IncID` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
@@ -151,7 +152,7 @@ ALTER TABLE `product`
 -- Indexen voor tabel `user`
 --
 ALTER TABLE `user`
- ADD PRIMARY KEY (`UserID`), ADD KEY `UserBedrijf` (`UserBedrijf`);
+ ADD PRIMARY KEY (`UserID`), ADD KEY `UserBedrijf` (`UserBedrijf`), ADD UNIQUE (`UserInlog`);
 
 --
 -- AUTO_INCREMENT voor geëxporteerde tabellen

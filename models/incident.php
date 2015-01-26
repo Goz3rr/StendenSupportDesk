@@ -3,6 +3,7 @@
 		public static function GetMap() {
 			return array(
 				'ID' => 'IncidentID',
+				'Titel' => 'IncidentTitel',
 				'Type' => 'IncidentType',
 				'Kanaal' => 'IncidentKanaal',
 				'Lijn' => 'IncidentLijn',

@@ -4,22 +4,22 @@
 
 {% block innerContent %}
     <div class="row">
-        <h2>tickets</h2>
+        <h2>{{ titel }}</h2>
     </div>
     <table class="table table-hover">
         <thead>
-            <tr><th># ID</th><th>Type</th><th>Kanaal</th><th>Lijn</th><th>Prioriteit</th><th>Melder</th><th>Laatst bekeken</th></tr>
+            <tr><th># ID</th><th>Titel</th><th>Type</th><th>Lijn</th><th>Prioriteit</th><th>Medewerker</th><th>Laatste reactie</th></tr>
         </thead>
         {% if items %}
             {% for item in items %}
                 <tr>
-                    <td>{{ item.incidentID }}</td>
-                    <td>{{ item.incidentType }}</td>
-                    <td>{{ item.incidentMelder }}</td>
-                    <td>{{ item.incidentOmschrijving }}</td>
-                    <td>{{ item.incidentPrioriteit }}</td>
-                    <td>{{ item.incidentMelder }}</td>
-                    <td>{{ item.incidentDatum }}</td>
+                    <td>{{ item.IncidentID }}</td>
+                    <td>{{ item.IncidentTitel }}</td>
+                    <td>{{ item.IncidentType }}</td>
+                    <td>{{ item.IncidentLijn }}</td>
+                    <td>{{ item.IncidentPrioriteit }}</td>
+                    <td>{{ item.IncidentMedewerker }}</td>
+                    <td>{{ item.IncReactieDatum }}</td>
                 </tr>
             {% endfor %}
         {% else %}
