@@ -92,9 +92,11 @@
                         <li>
                             <a href="/faq"><i class="fa fa-question-circle fa-fw"></i> FAQ</a>
                         </li>
-                        <li>
-                            <a href="/stats"><i class="fa fa-bar-chart fa-fw"></i> Statistieken</a>
-                        </li>
+                        {% if isMedewerker %}
+                            <li>
+                                <a href="/stats"><i class="fa fa-bar-chart fa-fw"></i> Statistieken</a>
+                            </li>
+                        {% endif %}
                     </ul>
                 </div>
             </div>
@@ -109,7 +111,7 @@
 {% block javascript %}
     <script src="//static.kuubstudios.com/datatables/1.10.4/js/jquery.dataTables.min.js"></script>
     <script src="//static.kuubstudios.com/datatables/1.10.4/js/dataTables.bootstrap.min.js"></script>
-    <script src="//static.kuubstudios.com/select2-4.0.0-beta.2/dist/js/select2.min.js"></script>
+    <script src="//static.kuubstudios.com/select2/3.5.2/select2.min.js"></script>
     <script src="//static.kuubstudios.com/moment.min.js"></script>
     <script src="//static.kuubstudios.com/moment.nl.js"></script>
     <script src="//static.kuubstudios.com/metisMenu-1.1.3/dist/metisMenu.min.js"></script>

@@ -217,11 +217,14 @@ WHERE (SELECT IncStatus FROM increactie WHERE IncID = I.IncidentID AND IncReacti
 				}
 
 				if(Auth::IsMedewerker()) {
+					$medewerkers = DB::Query("SELECT UserID, UserNaam FROM user WHERE UserBedrijf = 1");
+
 					return View::Render('tickets/list_all', array(
 							'type' => $request->type,
 							'titel' => $titel,
 							'items' => $items,
-							'colors' => $colors
+							'colors' => $colors,
+							'medewerkers' => $medewerkers
 						));
 				} else {
 					return View::Render('tickets/list', array(
