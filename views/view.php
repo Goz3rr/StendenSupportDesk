@@ -8,7 +8,8 @@
 
 		public static function Init() {
 			self::$twigLoader = new Twig_Loader_Filesystem(__DIR__);
-			self::$twig = new Twig_Environment(self::$twigLoader);
+			self::$twig = new Twig_Environment(self::$twigLoader, array('debug' => true,));
+			self::$twig->addExtension(new Twig_Extension_Debug());
 
 			$engine = new MarkdownEngine\PHPLeagueCommonMarkEngine();
 			self::$twig->addExtension(new MarkdownExtension($engine));

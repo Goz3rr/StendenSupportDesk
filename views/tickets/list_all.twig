@@ -8,7 +8,7 @@
     </div>
     <table id="ticketTable" class="table table-hover">
         <thead>
-            <tr><th># ID</th><th>Titel</th><th>Lijn</th><th>Medewerker</th><th>Laatste reactie</th></tr>
+            <tr><th># ID</th><th>Titel</th><th>Lijn</th><th>Klant</th><th>Medewerker</th><th>Laatste reactie</th></tr>
         </thead>
         <tbody>
             {% for item in items.Values %}
@@ -20,6 +20,7 @@
                         <span class="label {{ items.PrioColors[item.IncidentPrioriteit]|default("label-default") }}">{{ item.IncidentPrioriteit }}</span>
                     </td>
                     <td>{{ item.IncidentLijn }}</td>
+                    <td>{{ item.KlantNaam }}</td>
                     <td>{{ item.MedewerkerNaam|default("-") }}</td>
                     <td>{{ item.LastDatum }}</td>
                 </tr>

@@ -78,8 +78,13 @@
 
 		public function Delete() {
 			if($this->ID == null) return false;
-
-			return DB::Prepare(sprintf('DELETE FROM %s WHERE %s = ?;', static::GetTable(), static::GetMapKey('ID')), $this->ID);
+			
+			try {
+				return DB::Prepare(sprintf('DELETE FROM %s WHERE %s = ?;', static::GetTable(), static::GetMapKey('ID')), $this->ID);
+			} catch(PDOException $ex) {
+				$message = 'SQL Error: ' . $ex->getMessage();
+				die(View::Error($message));
+			}
 		}
 
 		public static function Get($id) {
@@ -124,18 +129,23 @@
 		}
 
 		public static function Where($column, $value = null) {
-			if(is_array($column)) {
+			try {
+				if(is_array($column)) {
 
-			} else {
-				if($column == null || $value == null) return false;
+				} else {
+					if($column == null || $value == null) return false;
 
-				$q = DB::Prepare(sprintf('SELECT * FROM %s WHERE %s = ? LIMIT 1;', static::GetTable(), $column), $value);
-				
-				if($q && $q->rowCount() > 0) {
-					$ent = new static();
-					$ent->Load($q->fetch());
-					return $ent;
+					$q = DB::Prepare(sprintf('SELECT * FROM %s WHERE %s = ? LIMIT 1;', static::GetTable(), $column), $value);
+					
+					if($q && $q->rowCount() > 0) {
+						$ent = new static();
+						$ent->Load($q->fetch());
+						return $ent;
+					}
 				}
+			} catch(PDOException $ex) {
+				$message = 'SQL Error: ' . $ex->getMessage();
+				die(View::Error($message));
 			}
 
 			return false;

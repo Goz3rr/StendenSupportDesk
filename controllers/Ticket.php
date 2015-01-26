@@ -46,6 +46,8 @@
 					$msg->Status = 'Open';
 					$msg->IncidentID = $inc->ID;
 					$msg->Save();
+
+					$response->redirect('/login')->send();
 				}
 			} else {
 				return View::Render('tickets/create');
@@ -55,58 +57,118 @@
 		public static function View($request, $response, $service) {
 			Auth::CheckLoggedIn();
 
-			$type = $request->type;
-			$items = array();
+			if(empty($request->type)) {
+				return 'hi';
+			} else {
+				$items = array(
+					'PrioColors' => array(
+						'Laag' => 'label-success',
+						'Gemiddeld' => 'label-warning',
+						'Hoog' => 'label-danger'
+					),
+					'TypeColors' => array(
+						'Vraag' => 'label-primary',
+						'Verzoek' => 'label-success',
+						'Incident' => 'label-danger',
+						'Functioneel Probleem' => 'label-warning',
+						'Technisch Probleem' => 'label-warning'
+					),
+					'Values' => array()
+				);
 
-			/*
-				SELECT * FROM
-				incident,
-				(SELECT * FROM increactie WHERE IncStatus = 'Open' ORDER BY IncReactieID ASC) AS FirstReactie,
-				(SELECT * FROM increactie WHERE IncStatus = 'Open' ORDER BY IncReactieID DESC) AS LastReactie
-				WHERE IncidentID = LastReactie.IncID AND IncidentID = FirstReactie.IncID GROUP BY IncidentID
-			*/
+				if($request->type == 'open') {
+					$titel = 'Openstaande Incidenten';
 
-			if($request->type == 'open') {
-				$titel = 'Openstaande Incidenten';
+					if(Auth::IsMedewerker()) {
+						$q = DB::Query("SELECT I.*, FirstReactie.IncUser AS StartUser, FirstReactie.IncReactieDatum AS StartDatum,
+							LastReactie.IncUser AS LastUser, LastReactie.IncReactieDatum AS LastDatum, LastReactie.IncStatus AS Status,
+							(SELECT UserNaam FROM user WHERE UserID = FirstReactie.IncUser) AS KlantNaam,
+							(SELECT UserNaam FROM user WHERE UserID = I.IncidentMedewerker) AS MedewerkerNaam
+							FROM
+								incident I,
+								(SELECT * FROM increactie WHERE IncStatus = 'Open' ORDER BY IncReactieID ASC) AS FirstReactie,
+								(SELECT * FROM increactie WHERE IncStatus = 'Open' ORDER BY IncReactieID DESC) AS LastReactie
+							WHERE IncidentID = LastReactie.IncID AND IncidentID = FirstReactie.IncID AND LastReactie.IncStatus != 'Afgehandeld' GROUP BY IncidentID
+						");
 
-				if(Auth::IsMedewerker()) {
-					$q = DB::Query("SELECT *
-						FROM
-							incident,
-							(SELECT * FROM increactie WHERE IncStatus = 'Open' ORDER BY IncReactieID DESC) AS LastReactie
-						WHERE IncidentID = LastReactie.IncID GROUP BY IncidentID
-					");
+						$items['Values'] = $q->fetchAll();
+					} else {
+						$q = DB::Prepare("SELECT I.*, FirstReactie.IncUser AS StartUser, FirstReactie.IncReactieDatum AS StartDatum,
+							LastReactie.IncUser AS LastUser, LastReactie.IncReactieDatum AS LastDatum, LastReactie.IncStatus AS Status,
+							(SELECT UserNaam FROM user WHERE UserID = FirstReactie.IncUser) AS KlantNaam,
+							(SELECT UserNaam FROM user WHERE UserID = I.IncidentMedewerker) AS MedewerkerNaam
+							FROM
+								incident I,
+								(SELECT * FROM increactie WHERE IncStatus = 'Open' ORDER BY IncReactieID ASC) AS FirstReactie,
+								(SELECT * FROM increactie WHERE IncStatus = 'Open' ORDER BY IncReactieID DESC) AS LastReactie
+							WHERE IncidentID = LastReactie.IncID AND IncidentID = FirstReactie.IncID AND LastReactie.IncStatus != 'Afgehandeld' AND FirstReactie.IncUser = ? GROUP BY IncidentID
+						", array($_SESSION['uid']));
 
-					$items = $q->fetchAll();
-				} else {
-					$q = DB::Prepare("SELECT * 
-						FROM
-							incident,
+						$items['Values'] = $q->fetchAll();
+					}
+				} elseif($request->type == 'closed') {
+					$titel = 'Afgesloten Incidenten';
+
+					if(Auth::IsMedewerker()) {
+						$q = DB::Query("SELECT I.*, FirstReactie.IncUser AS StartUser, FirstReactie.IncReactieDatum AS StartDatum,
+							LastReactie.IncUser AS LastUser, LastReactie.IncReactieDatum AS LastDatum, LastReactie.IncStatus AS Status,
+							(SELECT UserNaam FROM user WHERE UserID = FirstReactie.IncUser) AS KlantNaam,
+							(SELECT UserNaam FROM user WHERE UserID = I.IncidentMedewerker) AS MedewerkerNaam
+							FROM
+								incident I,
+								(SELECT * FROM increactie WHERE IncStatus = 'Open' ORDER BY IncReactieID ASC) AS FirstReactie,
+								(SELECT * FROM increactie WHERE IncStatus = 'Open' ORDER BY IncReactieID DESC) AS LastReactie
+							WHERE IncidentID = LastReactie.IncID AND IncidentID = FirstReactie.IncID AND LastReactie.IncStatus = 'Afgehandeld' GROUP BY IncidentID
+						");
+
+						$items['Values'] = $q->fetchAll();
+					} else {
+						$q = DB::Prepare("SELECT I.*, FirstReactie.IncUser AS StartUser, FirstReactie.IncReactieDatum AS StartDatum,
+							LastReactie.IncUser AS LastUser, LastReactie.IncReactieDatum AS LastDatum, LastReactie.IncStatus AS Status,
+							(SELECT UserNaam FROM user WHERE UserID = FirstReactie.IncUser) AS KlantNaam,
+							(SELECT UserNaam FROM user WHERE UserID = I.IncidentMedewerker) AS MedewerkerNaam
+							FROM
+								incident I,
+								(SELECT * FROM increactie WHERE IncStatus = 'Open' ORDER BY IncReactieID ASC) AS FirstReactie,
+								(SELECT * FROM increactie WHERE IncStatus = 'Open' ORDER BY IncReactieID DESC) AS LastReactie
+							WHERE IncidentID = LastReactie.IncID AND IncidentID = FirstReactie.IncID AND LastReactie.IncStatus = 'Afgehandeld' AND FirstReactie.IncUser = ? GROUP BY IncidentID
+						", array($_SESSION['uid']));
+
+						$items['Values'] = $q->fetchAll();
+					}
+				} elseif($request->type == 'new') {
+					Auth::CheckMedewerker();
+
+					$titel = 'Nieuwe Incidenten';
+					$q = DB::Query("SELECT I.*, FirstReactie.IncUser AS StartUser, FirstReactie.IncReactieDatum AS StartDatum,
+							LastReactie.IncUser AS LastUser, LastReactie.IncReactieDatum AS LastDatum, LastReactie.IncStatus AS Status,
+							(SELECT UserNaam FROM user WHERE UserID = FirstReactie.IncUser) AS KlantNaam,
+							(SELECT UserNaam FROM user WHERE UserID = I.IncidentMedewerker) AS MedewerkerNaam
+							FROM
+							incident I,
 							(SELECT * FROM increactie WHERE IncStatus = 'Open' ORDER BY IncReactieID ASC) AS FirstReactie,
 							(SELECT * FROM increactie WHERE IncStatus = 'Open' ORDER BY IncReactieID DESC) AS LastReactie
-						WHERE IncidentID = LastReactie.IncID AND IncidentID = FirstReactie.IncID AND FirstReactie.IncUser = ? GROUP BY IncidentID
-					", array($_SESSION['uid']));
-					$items = $q->fetchAll();
+						WHERE IncidentID = LastReactie.IncID AND IncidentID = FirstReactie.IncID AND IncidentMedewerker IS NULL GROUP BY IncidentID
+					");
+
+					$items['Values'] = $q->fetchAll();
+				} elseif($request->type == 'newreplies') {
+					$titel = 'Incidenten met nieuwe reacties';
 				}
-			} elseif($request->type == 'closed') {
-				$titel = 'Afgesloten Incidenten';
 
 				if(Auth::IsMedewerker()) {
-					$q = DB::Query("SELECT IncidentID, IncidentTitel, IncidentType, IncidentLijn, IncidentPrioriteit, IncidentMedewerker, IncReactieDatum FROM incident, (SELECT * FROM increactie WHERE IncStatus = 'Afgehandeld' ORDER BY IncReactieID DESC) AS reactie WHERE IncidentID = IncID GROUP BY IncidentID");
-					$items = $q->fetchAll();
+					return View::Render('tickets/list_all', array(
+							'type' => $request->type,
+							'titel' => $titel,
+							'items' => $items
+						));
 				} else {
-					
+					return View::Render('tickets/list', array(
+						'type' => $request->type,
+						'titel' => $titel,
+						'items' => $items
+					));
 				}
-			} elseif($request->type == 'new') {
-				$titel = 'Nieuwe Incidenten';
-			} elseif($request->type == 'newreplies') {
-				$titel = 'Incidenten met nieuwe reacties';
 			}
-
-			return View::Render('tickets/list', array(
-				'type' => $type,
-				'titel' => $titel,
-				'items' => $items
-			));
 		}
 	}

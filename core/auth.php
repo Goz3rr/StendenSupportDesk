@@ -56,7 +56,7 @@
 				$user = $_SESSION['uid'];
 			}
 
-			if(is_numeric($user)) $user = User::Where('UserID', $user);
+			if(is_numeric($user)) $user = User::Get($user);
 
 			return $user->BedrijfID == 1 && $user->Functie == 'TeamLeider';
 		}
@@ -67,7 +67,7 @@
 				$user = $_SESSION['uid'];
 			}
 
-			if(is_numeric($user)) $user = User::Where('UserID', $user);
+			if(is_numeric($user)) $user = User::Get($user);
 
 			return $user->BedrijfID == 1;
 		}
@@ -78,7 +78,7 @@
 				$user = $_SESSION['uid'];
 			}
 
-			if(is_numeric($user)) $user = User::Where('UserID', $user);
+			if(is_numeric($user)) $user = User::Get($user);
 
 			return $user->BedrijfID == 1 && $user->Functie == 'Beheerder';
 		}
