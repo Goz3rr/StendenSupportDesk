@@ -137,35 +137,33 @@
 					'replies' => $replies,
 					'colors' => $colors
 				));
-			} else {
+			} else { // godverdomme sql
 				$items = array();
 
 				if($request->type == 'open') {
 					$titel = 'Openstaande Incidenten';
 
 					if(Auth::IsMedewerker()) {
-						$q = DB::Query("SELECT I.*, FirstReactie.IncUser AS StartUser, FirstReactie.IncReactieDatum AS StartDatum,
-							LastReactie.IncUser AS LastUser, LastReactie.IncReactieDatum AS LastDatum, LastReactie.IncStatus AS Status,
-							(SELECT UserNaam FROM user WHERE UserID = FirstReactie.IncUser) AS KlantNaam,
-							(SELECT UserNaam FROM user WHERE UserID = I.IncidentMedewerker) AS MedewerkerNaam
-							FROM
-								incident I,
-								(SELECT * FROM increactie ORDER BY IncReactieID ASC) AS FirstReactie,
-								(SELECT * FROM increactie ORDER BY IncReactieID DESC) AS LastReactie
-							WHERE IncidentID = LastReactie.IncID AND IncidentID = FirstReactie.IncID AND LastReactie.IncStatus != 'Afgehandeld' GROUP BY IncidentID
+						$q = DB::Query("SELECT I.*,
+(SELECT IncStatus FROM increactie WHERE IncID = I.IncidentID AND IncReactieDatum = (SELECT MAX(IncReactieDatum) FROM increactie WHERE IncID = I.IncidentID)) AS Status,
+(SELECT IncReactieDatum FROM increactie WHERE IncID = I.IncidentID AND IncReactieDatum = (SELECT MAX(IncReactieDatum) FROM increactie WHERE IncID = I.IncidentID)) AS LastDatum,
+(SELECT IncUser FROM increactie WHERE IncID = I.IncidentID AND IncReactieDatum = (SELECT MIN(IncReactieDatum) FROM increactie WHERE IncID = I.IncidentID)) AS StartUser,
+(SELECT UserNaam FROM user WHERE UserID = StartUser) AS KlantNaam,
+(SELECT UserNaam FROM user WHERE UserID = I.IncidentMedewerker) AS MedewerkerNaam
+FROM incident I
+WHERE (SELECT IncStatus FROM increactie WHERE IncID = I.IncidentID AND IncReactieDatum = (SELECT MAX(IncReactieDatum) FROM increactie WHERE IncID = I.IncidentID)) != 'Afgehandeld'
 						");
 
 						$items = $q->fetchAll();
 					} else {
-						$q = DB::Prepare("SELECT I.*, FirstReactie.IncUser AS StartUser, FirstReactie.IncReactieDatum AS StartDatum,
-							LastReactie.IncUser AS LastUser, LastReactie.IncReactieDatum AS LastDatum, LastReactie.IncStatus AS Status,
-							(SELECT UserNaam FROM user WHERE UserID = FirstReactie.IncUser) AS KlantNaam,
-							(SELECT UserNaam FROM user WHERE UserID = I.IncidentMedewerker) AS MedewerkerNaam
-							FROM
-								incident I,
-								(SELECT * FROM increactie WHERE IncStatus = 'Open' ORDER BY IncReactieID ASC) AS FirstReactie,
-								(SELECT * FROM increactie WHERE IncStatus = 'Open' ORDER BY IncReactieID DESC) AS LastReactie
-							WHERE IncidentID = LastReactie.IncID AND IncidentID = FirstReactie.IncID AND LastReactie.IncStatus != 'Afgehandeld' AND FirstReactie.IncUser = ? GROUP BY IncidentID
+						$q = DB::Prepare("SELECT I.*,
+(SELECT IncStatus FROM increactie WHERE IncID = I.IncidentID AND IncReactieDatum = (SELECT MAX(IncReactieDatum) FROM increactie WHERE IncID = I.IncidentID)) AS Status,
+(SELECT IncReactieDatum FROM increactie WHERE IncID = I.IncidentID AND IncReactieDatum = (SELECT MAX(IncReactieDatum) FROM increactie WHERE IncID = I.IncidentID)) AS LastDatum,
+(SELECT IncUser FROM increactie WHERE IncID = I.IncidentID AND IncReactieDatum = (SELECT MIN(IncReactieDatum) FROM increactie WHERE IncID = I.IncidentID)) AS StartUser,
+(SELECT UserNaam FROM user WHERE UserID = StartUser) AS KlantNaam,
+(SELECT UserNaam FROM user WHERE UserID = I.IncidentMedewerker) AS MedewerkerNaam
+FROM incident I
+WHERE (SELECT IncStatus FROM increactie WHERE IncID = I.IncidentID AND IncReactieDatum = (SELECT MAX(IncReactieDatum) FROM increactie WHERE IncID = I.IncidentID)) != 'Afgehandeld' AND (SELECT IncUser FROM increactie WHERE IncID = I.IncidentID AND IncReactieDatum = (SELECT MIN(IncReactieDatum) FROM increactie WHERE IncID = I.IncidentID)) = ?
 						", array($_SESSION['uid']));
 
 						$items = $q->fetchAll();
@@ -174,28 +172,26 @@
 					$titel = 'Afgesloten Incidenten';
 
 					if(Auth::IsMedewerker()) {
-						$q = DB::Query("SELECT I.*, FirstReactie.IncUser AS StartUser, FirstReactie.IncReactieDatum AS StartDatum,
-							LastReactie.IncUser AS LastUser, LastReactie.IncReactieDatum AS LastDatum, LastReactie.IncStatus AS Status,
-							(SELECT UserNaam FROM user WHERE UserID = FirstReactie.IncUser) AS KlantNaam,
-							(SELECT UserNaam FROM user WHERE UserID = I.IncidentMedewerker) AS MedewerkerNaam
-							FROM
-								incident I,
-								(SELECT * FROM increactie WHERE IncStatus = 'Open' ORDER BY IncReactieID ASC) AS FirstReactie,
-								(SELECT * FROM increactie WHERE IncStatus = 'Open' ORDER BY IncReactieID DESC) AS LastReactie
-							WHERE IncidentID = LastReactie.IncID AND IncidentID = FirstReactie.IncID AND LastReactie.IncStatus = 'Afgehandeld' GROUP BY IncidentID
+						$q = DB::Query("SELECT I.*,
+(SELECT IncStatus FROM increactie WHERE IncID = I.IncidentID AND IncReactieDatum = (SELECT MAX(IncReactieDatum) FROM increactie WHERE IncID = I.IncidentID)) AS Status,
+(SELECT IncReactieDatum FROM increactie WHERE IncID = I.IncidentID AND IncReactieDatum = (SELECT MAX(IncReactieDatum) FROM increactie WHERE IncID = I.IncidentID)) AS LastDatum,
+(SELECT IncUser FROM increactie WHERE IncID = I.IncidentID AND IncReactieDatum = (SELECT MIN(IncReactieDatum) FROM increactie WHERE IncID = I.IncidentID)) AS StartUser,
+(SELECT UserNaam FROM user WHERE UserID = StartUser) AS KlantNaam,
+(SELECT UserNaam FROM user WHERE UserID = I.IncidentMedewerker) AS MedewerkerNaam
+FROM incident I
+WHERE (SELECT IncStatus FROM increactie WHERE IncID = I.IncidentID AND IncReactieDatum = (SELECT MAX(IncReactieDatum) FROM increactie WHERE IncID = I.IncidentID)) = 'Afgehandeld'
 						");
 
 						$items = $q->fetchAll();
 					} else {
-						$q = DB::Prepare("SELECT I.*, FirstReactie.IncUser AS StartUser, FirstReactie.IncReactieDatum AS StartDatum,
-							LastReactie.IncUser AS LastUser, LastReactie.IncReactieDatum AS LastDatum, LastReactie.IncStatus AS Status,
-							(SELECT UserNaam FROM user WHERE UserID = FirstReactie.IncUser) AS KlantNaam,
-							(SELECT UserNaam FROM user WHERE UserID = I.IncidentMedewerker) AS MedewerkerNaam
-							FROM
-								incident I,
-								(SELECT * FROM increactie WHERE IncStatus = 'Open' ORDER BY IncReactieID ASC) AS FirstReactie,
-								(SELECT * FROM increactie WHERE IncStatus = 'Open' ORDER BY IncReactieID DESC) AS LastReactie
-							WHERE IncidentID = LastReactie.IncID AND IncidentID = FirstReactie.IncID AND LastReactie.IncStatus = 'Afgehandeld' AND FirstReactie.IncUser = ? GROUP BY IncidentID
+						$q = DB::Prepare("SELECT I.*,
+(SELECT IncStatus FROM increactie WHERE IncID = I.IncidentID AND IncReactieDatum = (SELECT MAX(IncReactieDatum) FROM increactie WHERE IncID = I.IncidentID)) AS Status,
+(SELECT IncReactieDatum FROM increactie WHERE IncID = I.IncidentID AND IncReactieDatum = (SELECT MAX(IncReactieDatum) FROM increactie WHERE IncID = I.IncidentID)) AS LastDatum,
+(SELECT IncUser FROM increactie WHERE IncID = I.IncidentID AND IncReactieDatum = (SELECT MIN(IncReactieDatum) FROM increactie WHERE IncID = I.IncidentID)) AS StartUser,
+(SELECT UserNaam FROM user WHERE UserID = StartUser) AS KlantNaam,
+(SELECT UserNaam FROM user WHERE UserID = I.IncidentMedewerker) AS MedewerkerNaam
+FROM incident I
+WHERE (SELECT IncStatus FROM increactie WHERE IncID = I.IncidentID AND IncReactieDatum = (SELECT MAX(IncReactieDatum) FROM increactie WHERE IncID = I.IncidentID)) = 'Afgehandeld' AND (SELECT IncUser FROM increactie WHERE IncID = I.IncidentID AND IncReactieDatum = (SELECT MIN(IncReactieDatum) FROM increactie WHERE IncID = I.IncidentID)) = ?
 						", array($_SESSION['uid']));
 
 						$items = $q->fetchAll();
