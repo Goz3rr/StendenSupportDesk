@@ -6,16 +6,42 @@
     <div class="row">
         <h2>Zoekresultaten voor {{ search }}</h2>
     </div>
-    <table class="table table-hover">
+    <table id="ticketTable" class="table table-hover">
         <thead>
-        <tr><th># ID</th><th>Type</th><th>Kanaal</th><th>Melder</th><th>Omschrijving</th><th>Prioriteit</th><th>Datum</th></tr>
+        <tr><th># ID</th><th>Titel</th><th>Lijn</th><th>Medewerker</th><th>Laatste reactie</th></tr>
         </thead>
         {% if items %}
             {% for item in items %}
-                <tr><td>{{ item.incidentID }}</td><td>{{ item.incidentType }}</td><td>{{ item.incidentMelder }}</td><td>{{ item.incidentOmschrijving }}</td><td>{{ item.incidentPrioriteit }}</td><td>{{ item.incidentDatum }}</td></tr>
+                <tr>
+                    <td>{{ item.IncidentID }}</td>
+                    <td>
+                        {{ item.IncidentTitel }}
+                        <span class="label {{ colors.Type[item.IncidentType]|default("label-default") }}">{{ item.IncidentType }}</span>
+                        <span class="label {{ colors.Prio[item.IncidentPrioriteit]|default("label-default") }}">{{ item.IncidentPrioriteit }}</span>
+                    </td>
+                    <td>{{ item.IncidentLijn }}</td>
+                    <td>{{ item.MedewerkerNaam|default("-") }}</td>
+                    <td><time datetime="{{ item.LastDatum }}">{{ item.LastDatum }}</time></td>
+                </tr>
             {% endfor %}
         {% else %}
             <tr><td colspan="7">Geen resultaten gevonden</td></tr>
         {%  endif %}
     </table>
+{% endblock %}
+
+{% block innerJavascript %}
+    $(document).ready(function() {
+    oTable = $('#ticketTable').dataTable({
+    'language': {
+    'url': '//static.kuubstudios.com/datatables/1.10.4/dutch.json'
+    }
+    });
+
+    $('#ticketTable tbody td').click(function() {
+    var aPos = oTable.fnGetPosition(this);
+    var aData = oTable.fnGetData(aPos[0]);
+    document.location.href = "/tickets/view/" + aData[0];
+    });
+    });
 {% endblock %}
