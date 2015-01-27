@@ -51,10 +51,10 @@
                     <div class="form-group">
                         <label class="col-sm-2 control-label" for="textinput">Status aanpassen</label>
                         <div class="col-sm-4">
-                            <select name="newstatus" class="form-control" value="{{ replies|last.IncStatus }}">
-                                <option value="Open">Open</option>
-                                <option value="In behandeling">In behandeling</option>
-                                <option value="Afgehandeld">Afgehandeld</option>
+                            <select name="newstatus" class="form-control">
+                                <option value="Open"{{ replies|last.IncStatus == 'Open' ? ' selected="selected"' : '' }}>Open</option>
+                                <option value="In behandeling"{{ replies|last.IncStatus == 'In behandeling' ? ' selected="selected"' : '' }}>In behandeling</option>
+                                <option value="Afgehandeld"{{ replies|last.IncStatus == 'Afgehandeld' ? ' selected="selected"' : '' }}>Afgehandeld</option>
                             </select>
                         </div>
                     </div>

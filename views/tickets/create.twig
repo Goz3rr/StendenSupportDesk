@@ -25,6 +25,30 @@
                         </div>
                     </div>
 
+                    {% if isMedewerker %}
+
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label" for="textinput">Klant</label>
+                        <div class="col-sm-5">
+                            <select id="klant" name="klant" class="form-control">
+                                {% for k in klanten %}
+                                    <option value="{{ k.BedrijfID }}">{{ k.BedrijfNaam }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <label class="col-sm-2 control-label" for="textinput">Kanaal</label>
+                        <div class="col-sm-3">
+                            <select name="kanaal" class="form-control">
+                                <option value="Telefoon">Telefoon</option>
+                                <option value="Email">Email</option>
+                                <option value="Ticket">Ticket</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    {% endif %}
+
                     <div class="form-group">
                         <label class="col-sm-2 control-label" for="textinput">Type</label>
                         <div class="col-sm-4">
@@ -58,4 +82,10 @@
             </form>
         </div>
     </div>
+{% endblock %}
+
+{% block innerJavascript %}
+    $(document).ready(function() {
+        $('#klant').select2();
+    });
 {% endblock %}

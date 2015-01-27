@@ -37,7 +37,7 @@
 			$q = DB::Prepare("SELECT UserBedrijf FROM increactie, user WHERE IncUser = UserID AND IncID = ? GROUP BY IncID", array($request->id));
 			$r = $q->fetch();
 
-			if(Auth::IsMedewerker() || $user->Bedrijf == $r['UserBedrijf']) {
+			if(Auth::IsMedewerker() || $user->BedrijfID == $r['UserBedrijf']) {
 				$reply = new Reactie();
 				$reply->User = $_SESSION['uid'];
 				$reply->Reactie = $reactie;
@@ -76,7 +76,29 @@
 				}
 
 				if(Auth::IsMedewerker()) {
+					$bedrijf = $_POST['klant'];
+					$klant = User::Where('UserBedrijf', $bedrijf);
+					
+					if(!$klant) {
+						return View::Error('Onbekend bedrijf! (dit hoort niet te kunnen)');
+					}
 
+					$inc = new Incident();
+					$inc->Titel = $titel;
+					$inc->Type = $type;
+					$inc->Kanaal = $_POST['kanaal'];
+					$inc->Lijn = 1;
+					$inc->Prioriteit = $prio;
+					$inc->Medewerker = $_SESSION['uid'];
+					$inc->Save();
+
+					$msg = new Reactie();
+					$msg->User = $klant->ID;
+					$msg->Reactie = $omschrijving;
+					$msg->Datum = date('Y-m-d H:i:s');
+					$msg->Status = 'Open';
+					$msg->IncidentID = $inc->ID;
+					$msg->Save();
 				} else {
 					$inc = new Incident();
 					$inc->Titel = $titel;
@@ -93,11 +115,19 @@
 					$msg->Status = 'Open';
 					$msg->IncidentID = $inc->ID;
 					$msg->Save();
-
-					$response->redirect('/tickets/view/' . $inc->ID)->send();
 				}
+				$response->redirect('/tickets/view/' . $inc->ID)->send();
 			} else {
-				return View::Render('tickets/create');
+				$klanten = array();
+
+				if(Auth::IsMedewerker()) {
+					$q = DB::Query("SELECT BedrijfID, BedrijfNaam FROM bedrijf WHERE BedrijfID > 1");
+					$klanten = $q->fetchAll();
+				}
+
+				return View::Render('tickets/create', array(
+					'klanten' => $klanten
+				));
 			}
 		}
 

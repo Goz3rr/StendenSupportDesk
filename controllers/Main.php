@@ -4,6 +4,8 @@
 			$klein->respond('GET', '/', 'MainController::Index');
 			$klein->respond(array('GET', 'POST'), '/login', 'MainController::Login');
 			$klein->respond('GET', '/logout', 'MainController::Logout');
+			$klein->respond(array('GET', 'POST'), '/forgotpass', 'MainController::ForgotPass');
+			$klein->respond('POST', '/changepass', 'MainController::ChangePass');
 
 			$klein->respond('GET', '/stats', 'MainController::Stats');
 		}
@@ -46,7 +48,7 @@
 				die(View::Error($message));
 			}
 
-			return View::Render('index', array('stats' => $stats));
+			return View::Render('main/index', array('stats' => $stats));
 		}
 
 		public static function Login($request, $response, $service) {
@@ -60,12 +62,12 @@
 				$remember = isset($_POST['remember']) ? $_POST['remember'] : false;
 
 				if(empty($username) || empty($password)) {
-					return View::Render('login', array('errormsg' => 'Vul een gebruikersnaam en wachtwoord in'));
+					return View::Render('main/login', array('errormsg' => 'Vul een gebruikersnaam en wachtwoord in'));
 				}
 
 				$valid = Auth::LogIn($username, $password, $remember);
 				if(!$valid) {
-					return View::Render('login', array('errormsg' => 'Incorrecte gebruikersnaam of wachtwoord'));
+					return View::Render('main/login', array('errormsg' => 'Incorrecte gebruikersnaam of wachtwoord'));
 				}
 
 				$url = isset($_POST['redirect']) ? urldecode($_POST['redirect']) : '/';
@@ -77,9 +79,56 @@
 				}
 
 				if(isset($_GET['redirect'])) {
-					return View::Render('login', array('redirect' => $_GET['redirect']));
+					return View::Render('main/login', array('redirect' => $_GET['redirect']));
 				} else {
-					return View::Render('login');
+					return View::Render('main/login');
+				}
+			}
+		}
+
+		public static function ChangePass($request, $response, $service) {
+			$key = $_POST['key'];
+		}
+
+		public static function ForgotPass($request, $response, $service) {
+			if(Auth::IsLoggedIn()) {
+				$response->redirect('/')->send();
+				return;
+			}
+
+			if($_SERVER['REQUEST_METHOD'] == 'POST') {
+				$username = $_POST['username'];
+
+				if(empty($username)) {
+					return View::Render('main/forgotpass', array('errormsg' => 'Vul een gebruikersnaam in'));
+				}
+
+				$user = User::Where('UserInlog', $username);
+				if(!$user) {
+					return View::Render('main/forgotpass', array('errormsg' => 'Onbekende gebruiker ' . $username));
+				}
+
+				$key = urlencode(base64_encode($user->Wachtwoord));
+				$body = sprintf('<html><body>Om uw wachtwoord voor de Stenden Support Desk te resetten klik <a href="http://stendensupportdesk.tk/forgotpass?key=%s">hier</a></body></html>', $key);
+
+				$ok = Mail::Send($user->Email, 'Vergeten wachtwoord', $body);
+				if(!$ok) {
+					return View::Render('main/forgotpass', array('errormsg' => 'Mail kon niet verstuurd worden'));
+				}
+
+				return View::Render('main/forgotpass', array('errormsg' => 'Email is verstuurd naar ' . $user->Email));
+			} else {
+				if(isset($_GET['key'])) {
+					$oldpass = base64_decode($_GET['key']);
+
+					$user = User::Where('UserWw', $oldpass);
+					if($user) {
+						return View::Render('main/forgotpass_new', array('key' => $oldpass));
+					} else {
+						$response->redirect('/')->send();
+					}
+				} else {
+					return View::Render('main/forgotpass');
 				}
 			}
 		}
@@ -92,6 +141,6 @@
 		public static function Stats($request, $response, $service) {
 			Auth::CheckLoggedIn();
 			
-			return View::render('stats');
+			return View::Render('main/stats');
 		}
 	}
