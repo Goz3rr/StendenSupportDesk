@@ -10,6 +10,8 @@
 
 	require_once(BASE_PATH . '/vendor/autoload.php');
 
+	require_once(BASE_PATH . '/views/view.php');
+	
 	require_once(BASE_PATH . '/core/sql.php');
 	require_once(BASE_PATH . '/core/auth.php');
 	require_once(BASE_PATH . '/core/validate.php');
@@ -22,8 +24,6 @@
 	require_once(BASE_PATH . '/models/product.php');
 	require_once(BASE_PATH . '/models/reactie.php');
 	require_once(BASE_PATH . '/models/user.php');
-
-	require_once(BASE_PATH . '/views/view.php');
 
 	$klein = new \Klein\Klein();
 

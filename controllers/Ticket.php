@@ -4,6 +4,7 @@
 			$klein->respond(array('GET', 'POST'), '/tickets/create', 'TicketController::Create');
 			$klein->respond('POST', '/tickets/reply/[i:id]', 'TicketController::Reply');
 			$klein->respond('GET', '/tickets/view/[open|closed|new|newreplies:type]?/[i:id]?', 'TicketController::View');
+			$klein->respond('POST', '/tickets/assign/[i:id]', 'TicketController::Assign');
 		}
 
 		public static function Reply($request, $response, $service) {
@@ -129,6 +130,29 @@
 					'klanten' => $klanten
 				));
 			}
+		}
+
+		public static function Assign($request, $response, $service) {
+			if(Auth::IsMedewerker()) {
+				$ticket = Incident::Where('IncidentID', $request->id);
+				if($ticket) {
+					$assigned = User::Where('UserID', $_POST['medewerker']);
+					if($assigned) {
+						$ticket->MedewerkerID = $assigned->ID;
+						$ticket->Save();
+
+						$msg = new Reactie();
+						$msg->User = $_SESSION['uid'];
+						$msg->Reactie = sprintf('**%s** heeft **%s** toegewezen', $_SESSION['naam'], $assigned->Naam);
+						$msg->Datum = date('Y-m-d H:i:s');
+						$msg->Status = 'In Behandeling';
+						$msg->IncidentID = $ticket->ID;
+						$msg->Save();
+					}
+				}
+			}
+
+			$response->redirect('/tickets/view/open')->send();
 		}
 
 		public static function View($request, $response, $service) {

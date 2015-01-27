@@ -20,6 +20,7 @@
 			}
 
 			$_SESSION['uid'] = $user->ID;
+			$_SESSION['naam'] = $user->Naam;
 
 			return true;
 		}

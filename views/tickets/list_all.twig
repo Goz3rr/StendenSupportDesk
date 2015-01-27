@@ -21,7 +21,13 @@
                     </td>
                     <td>{{ item.IncidentLijn }}</td>
                     <td><a href="/customers/view/{{ item.StartUser }}">{{ item.KlantNaam }}</a></td>
-                    <td>{{ item.MedewerkerNaam|default('<a data-id="{{ item.IncidentID }}" href="#">Toewijzen</a>')|raw }}</td>
+                    <td>
+                        {% if item.MedewerkerNaam %}
+                            {{ item.MedewerkerNaam }}
+                        {% else %}
+                            <a data-id="{{ item.IncidentID }}" class="toewijzen" href="#">Toewijzen</a>
+                        {% endif %}
+                    </td>
                     <td><time datetime="{{ item.LastDatum }}">{{ item.LastDatum }}</time></td>
                 </tr>
             {% endfor %}
@@ -29,7 +35,7 @@
     </table>
 
     <div id="selectding" style="display:none">
-        <form>
+        <form method="POST">
             <div class="input-group select2-bootstrap-append">
                 <select class="form-control" name="medewerker" style="min-width:200px">
                     {% for m in medewerkers %}
@@ -37,8 +43,7 @@
                     {% endfor %}
                 </select>
                 <span class="input-group-btn">
-                    <button class="btn btn-danger" type="button"><i class="fa fa-fw fa-times"></i></button>
-                    <button class="btn btn-success" type="button"><i class="fa fa-fw fa-check"></i></button>
+                    <button class="btn btn-success" type="submit"><i class="fa fa-fw fa-check"></i></button>
                 </span>
             </div>
         </form>
@@ -62,7 +67,7 @@
             document.location.href = "/tickets/view/" + aData[0];
         });
 
-        $('a[href="#"]').on('click', function(e) {
+        $('.toewijzen').on('click', function(e) {
             e.stopPropagation();
             $(this).blur();
 
@@ -70,6 +75,8 @@
             var n = $('#selectding').clone().removeAttr('id').css('display', 'block');
             $(this).replaceWith(n);
             n.find('select').select2();
+
+            n.find('form').get(0).setAttribute('action', '/tickets/assign/' + $(this).data('id'));
 
             return false;
         });
