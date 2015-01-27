@@ -148,6 +148,8 @@
 						$msg->Status = 'In Behandeling';
 						$msg->IncidentID = $ticket->ID;
 						$msg->Save();
+
+						return $response->redirect('/tickets/view/' . $ticket->ID)->send();
 					}
 				}
 			}
