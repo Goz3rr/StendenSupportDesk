@@ -25,7 +25,7 @@
                     <td>{{ item.UserNaam }}</td>
                     <td>{{ item.Telefoon|default('-') }}</td>
                     <td><a href="mailto:{{ item.Email }}">{{ item.Email }}</a></td>
-                    <td>{{ item.BedrijfNaam }}</td>
+                    <td><a href="/customers/view/{{ item.BedrijfID }}">{{ item.BedrijfNaam }}</a></td>
                     <td>{{ item.UserFunctie|default('-') }}</td>
                     <td>{{ item.UserAfdeling|default('-') }}</td>
                 </tr>
@@ -39,7 +39,8 @@
         $('#userstable').DataTable({
             'language': {
                 'url': '//static.kuubstudios.com/datatables/1.10.4/dutch.json'
-            }
+            },
+            'iDisplayLength': 25
         });
     });
 {% endblock %}

@@ -50,7 +50,8 @@
         oTable = $('#ticketTable').dataTable({
             'language': {
                 'url': '//static.kuubstudios.com/datatables/1.10.4/dutch.json'
-            }
+            },
+            'iDisplayLength': 25
         });
 
         $('#ticketTable tbody td').click(function(e) {
