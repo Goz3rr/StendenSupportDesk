@@ -124,6 +124,10 @@
 				if(Auth::IsMedewerker()) {
 					$q = DB::Query("SELECT BedrijfID, BedrijfNaam FROM bedrijf WHERE BedrijfID > 1");
 					$klanten = $q->fetchAll();
+				} else {
+					if(!Auth::ValidLicense()) {
+						return View::Error('Uw licentie is verlopen. Neem contact op met de klantenservice.');
+					}
 				}
 
 				return View::Render('tickets/create', array(

@@ -51,6 +51,19 @@
 			return (strlen($pass) >= 5);
 		}
 
+		public static function ValidLicense($bedrijf = null) {
+			if($bedrijf == null) {
+				$q = DB::Query("SELECT UserBedrijf FROM user WHERE UserID = " . $_SESSION['uid']);
+				$bedrijf = $q->fetch()['UserBedrijf'];
+			}
+
+			if($bedrijf == 1) return true;
+
+			$q = DB::Prepare("SELECT ProductLicentieTot FROM product WHERE ProductKlantID = ? AND Product = 'Helpdesk' ORDER BY ProductLicentieTot DESC LIMIT 1", array($bedrijf));
+			$row = $q->fetch();
+			return strtotime($row['ProductLicentieTot']) > time();
+		}
+
 		public static function IsTeamLeider($user = null) {
 			if($user == null) {
 				if(!Auth::IsLoggedIn()) return false;
