@@ -88,6 +88,30 @@
 
 		public static function ChangePass($request, $response, $service) {
 			$key = $_POST['key'];
+			$pass1 = $_POST['pass1'];
+			$pass2 = $_POST['pass2'];
+
+			$user = User::Where('UserWw', $key);
+			if(!$user) {
+				return $response->redirect('/')->send();
+			}
+
+			if(empty($pass1) || empty($pass2)) {
+				return View::Render('main/forgotpass_new', array('errormsg' => 'Vul beide velden in', 'key' => $key));
+			}
+
+			if($pass1 != $pass2) {
+				return View::Render('main/forgotpass_new', array('errormsg' => 'Wachtwoorden komen niet overeen', 'key' => $key));
+			}
+
+			if(!Auth::ValidPassword($pass1)) {
+				return View::Render('main/forgotpass_new', array('errormsg' => 'Wachtwoord moet minstens 5 tekens zijn', 'key' => $key));	
+			}
+
+			$user->Wachtwoord = password_hash($pass1, PASSWORD_DEFAULT);
+			$user->Save();
+
+			return $response->redirect('/')->send();
 		}
 
 		public static function ForgotPass($request, $response, $service) {
