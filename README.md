@@ -1,4 +1,4 @@
-StendenSupportDesk! [alt text](http://stendensupportdesk.tk/avatars/1.jpg "SSD")
+StendenSupportDesk!
 ==================
 
 Beschrijving van het nieuwe systeem
