@@ -4,7 +4,12 @@
 
 {% block innerContent %}
     <div class="row">
-        <h2>Gebruikers</h2>
+        <div class="col-lg-11">
+            <h2 class="page-header">Gebruikers</h2>
+        </div>
+        <div class="col-lg-1">
+            <h2 class="page-header" style="text-align:right"><a data-toggle="modal" data-target="#create-new" href="#"><i class="fa fa-fw fa-plus"></i></a></h2>
+        </div>
     </div>
     <table id="userstable" class="table table-hover">
         <thead>
@@ -32,6 +37,74 @@
             {% endfor %}
         </tbody>
     </table>
+
+<div class="modal fade" id="create-new" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form role="form" class="form-horizontal" method="POST" action="/admin/users/create">
+                <div class="modal-header">
+                    Gebruiker Toevoegen
+                </div>
+                <div class="modal-body">
+                    <fieldset>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label" for="textinput">Naam</label>
+                            <div class="col-sm-10">
+                                <input type="text" placeholder="Volledige Naam" name="naam" class="form-control" required>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label" for="textinput">Inlog</label>
+                            <div class="col-sm-10">
+                                <input type="text" placeholder="Inlog Naam" name="loginname" class="form-control" required>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label" for="textinput">Email</label>
+                            <div class="col-sm-10">
+                                <input type="email" placeholder="Email Adres" name="email" class="form-control" required>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label" for="textinput">Bedrijf</label>
+                            <div class="col-sm-5">
+                                <select id="klant" name="bedrijf" class="form-control">
+                                    {% for k in klanten %}
+                                        <option value="{{ k.BedrijfID }}">{{ k.BedrijfNaam }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+
+                            <label class="col-sm-2 control-label" for="textinput">Functie</label>
+                            <div class="col-sm-3">
+                                <input type="text" placeholder="Functie" name="functie" class="form-control" required>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label" for="textinput">Telefoon</label>
+                            <div class="col-sm-5">
+                                <input type="tel" placeholder="Telefoon nummer (opt)" name="telefoon" class="form-control">
+                            </div>
+
+                            <label class="col-sm-2 control-label" for="textinput">Afdeling</label>
+                            <div class="col-sm-3">
+                                <input type="text" placeholder="Afdeling (opt)" name="afdeling" class="form-control">
+                            </div>
+                        </div>
+                    </fieldset>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Annuleren</button>
+                    <input type="submit" name="submit" class="btn btn-success" value="Toevoegen">
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 {% endblock %}
 
 {% block innerJavascript %}
@@ -42,5 +115,7 @@
             },
             'iDisplayLength': 25
         });
+
+        $('#klant').select2();
     });
 {% endblock %}

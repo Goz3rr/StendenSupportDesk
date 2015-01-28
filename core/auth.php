@@ -11,6 +11,25 @@
 			return $pass;
 		}
 
+		public static function CreateUser($username, $name, $bedrijf, $functie, $email, $afdeling = null, $telefoon = null) {
+			$pass = self::MakePassword();
+
+			$user = new User();
+			$user->Inlog = $username;
+			$user->Wachtwoord = password_hash($pass, PASSWORD_DEFAULT);
+			$user->Naam = $name;
+			$user->BedrijfID = $bedrijf;
+			$user->Functie = $functie;
+			$user->Email = $email;
+			$user->Afdeling = $afdeling;
+			$user->Telefoon = $telefoon;
+			$user->Save();
+
+			$body = sprintf('<html><body>Hierbij uw inlog gegevens:<br><p><strong>Naam:</strong> %s<br><strong>Wachtwoord:</strong> %s</p></body></html>', $email, $pass);
+
+			return Mail::Send($email, 'Uw account is aangemaakt', $body);
+		}
+
 		public static function LogIn($username, $password, $remember) {
 			if(isset($_SESSION['uid'])) return;
 
@@ -72,7 +91,7 @@
 
 			if(is_numeric($user)) $user = User::Get($user);
 
-			return $user->BedrijfID == 1 && $user->Functie == 'TeamLeider';
+			return $user->BedrijfID == 1 && $user->Functie == 'Teamleider';
 		}
 
 		public static function IsMedewerker($user = null) {
