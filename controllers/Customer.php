@@ -2,6 +2,7 @@
 	class CustomerController extends Controller {
 		public static function Routes($klein) {
 			$klein->respond('POST', '/customers/create', 'CustomerController::Create');
+			$klein->respond('POST', '/customers/license/[i:id]', 'CustomerController::License');
 			$klein->respond('GET', '/customers/[list|view:action]?/[i:id]?', 'CustomerController::View');
 		}
 
@@ -43,6 +44,30 @@
 			}
 		}
 
+		public static function License($request, $response, $service) {
+			Auth::CheckMedewerker();
+
+			$id = $request->id;
+			$klant = Bedrijf::Where('BedrijfID', $id);
+			if(!$klant) {
+				return View::Error('Onbekende klant');
+			}
+
+
+			$type = $_POST['type'];
+			$van = $_POST['van'];
+			$tot = $_POST['tot'];
+
+			$product = new Product();
+			$product->Product = $type;
+			$product->Aanschaf = $van;
+			$product->LicentieTot = $tot;
+			$product->KlantID = $klant->ID;
+			$product->Save();
+
+			$response->redirect('/customers/view/' . $klant->ID)->send();
+		}
+
 		public static function View($request, $response, $service) {
 			Auth::CheckMedewerker();
 
@@ -74,7 +99,18 @@
 				if($request->id == null) {
 					$response->redirect('/customers/list')->send();
 				} else {
-					// specifieke klant
+					$klant = Bedrijf::Where('BedrijfID', $request->id);
+
+					if(!$klant) {
+						return View::Error('Onbekende klant');
+					}
+
+					$licenties = DB::Prepare("SELECT * FROM product WHERE ProductKlantID = ? ORDER BY ProductLicentieTot DESC", array($request->id))->fetchAll();
+
+					return View::Render('customers/view', array(
+						'klant' => $klant,
+						'licenties' => $licenties
+					));
 				}
 			}
 		}

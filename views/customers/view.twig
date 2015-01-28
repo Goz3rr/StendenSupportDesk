@@ -1,40 +1,115 @@
 {% extends "dashboard.twig" %}
 
-{% block title %}Nieuwe klant aanmaken| Stenden Support Desk{% endblock %}
+{% block title %}Klantgegevens | Stenden Support Desk{% endblock %}
 
 {% block innerContent %}
     <div class="row">
-        <h2>Nieuwe klant aanmaken</h2>
-        <form role="form" method="POST" action="/login">
-            <fieldset>
-                <legend>Klantgegevens</legend>
-                <div class="form-group">
-                    Bedrijfsnaam
-                    <input class="form-control" placeholder="Bedrijfsnaam" name="bedrijfsnaam" type="text" autofocus>
-                </div>
-                <div class="form-group">
-                    Adres
-                    <input class="form-control" placeholder="Adres" name="adres" type="text">
-                </div>
-                <div class="form-group">
-                    Postcode
-                    <input class="form-control" placeholder="Postcode" name="postcode" type="text">
-                </div>
-                <div class="form-group">
-                    Plaats
-                    <input class="form-control" placeholder="Plaats" name="plaats" type="text">
-                </div>
-                <div class="form-group">
-                    Telefoonnummer
-                    <input class="form-control" placeholder="Telefoonnnummer" name="telefoon" type="text">
-                </div>
-                <div class="form-group">
-                    Emailadres
-                    <input class="form-control" placeholder="Emailadres" name="email" type="text">
-                </div>
-                
-                <input type="submit" name="submit" class="btn btn-lg btn-success btn-block" value="Opslaan">
-            </fieldset>
-        </form>
+        <h2>Klantgevevens van {{ klant.Naam }}</h2>
     </div>
+
+    <div class="row">
+        <div class="col-lg-6">
+            <form class="form-horizontal">
+                <fieldset>
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label" for="textinput">Adres</label>
+                        <div class="col-sm-8">
+                            <input type="text" value="{{ klant.Adres ~ ' ' ~ klant.Postcode ~ ' ' ~ klant.Plaats }}" class="form-control" name="naam" disabled>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label" for="textinput">Telefoon</label>
+                        <div class="col-sm-8">
+                            <input type="tel" value="{{ klant.Telefoon }}" class="form-control" name="naam" disabled>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label" for="textinput">Email</label>
+                        <div class="col-sm-8">
+                            <input type="email" value="{{ klant.Email }}" class="form-control" name="naam" disabled>
+                        </div>
+                    </div>
+                </fieldset>
+            </form>
+        </div>
+        <div class="col-lg-offset-2 col-lg-4">
+            <table id="licensetable" class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Product</th>
+                        <th>Aanschaf</th>
+                        <th>Tot</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for l in licenties %}
+                        <tr>
+                            <td>{{ l.Product }}</td>
+                            <td>{{ l.ProductAanschaf }}</td>
+                            <td>{{ l.ProductLicentieTot }}</td>
+                        </tr>
+                    {% endfor %}
+                    <tr><td><a data-toggle="modal" data-target="#create-new" href="#">Toevoegen</a><td></td></td><td></td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="modal fade" id="create-new" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form role="form" class="form-horizontal" method="POST" action="/customers/license/{{ klant.ID }}">
+                    <div class="modal-header">
+                        Licentie Toevoegen
+                    </div>
+                    <div class="modal-body">
+                        <fieldset>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label" for="textinput">Type</label>
+                                <div class="col-sm-10">
+                                    <select name="type" class="form-control" required>
+                                        <option value="Finsoft">Finsoft</option>
+                                        <option value="Helpdesk">Helpdesk</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label" for="textinput">Van</label>
+                                <div class="col-sm-4">
+                                    <input type="date" id="van" name="van" class="form-control" required>
+                                </div>
+
+                                <label class="col-sm-2 control-label" for="textinput">Tot</label>
+                                <div class="col-sm-4">
+                                    <input type="date" id="tot" name="tot" class="form-control" required>
+                                </div>
+                            </div>
+                        </fieldset>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Annuleren</button>
+                        <input type="submit" name="submit" class="btn btn-success" value="Toevoegen">
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block innerJavascript %}
+    Date.prototype.toDateInputValue = (function() {
+        var local = new Date(this);
+        local.setMinutes(this.getMinutes() - this.getTimezoneOffset());
+        return local.toJSON().slice(0,10);
+    });
+
+    $(document).ready(function() {
+        $('#van').val(new Date().toDateInputValue());
+        var next = new Date();
+        next.setFullYear(next.getFullYear() + 1);
+        $('#tot').val(next.toDateInputValue());
+    });
 {% endblock %}
