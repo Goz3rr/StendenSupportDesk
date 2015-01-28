@@ -64,7 +64,7 @@
 					return View::Error('Alle velden moeten worden ingevuld');
 				}
 				
-				if(in_array($_POST['prioriteit'], array('Vraag', 'Verzoek', 'Incident', 'Functioneel Probleem', 'Technisch Probleem'))) {
+				if(in_array($_POST['type'], array('Vraag', 'Verzoek', 'Incident', 'Functioneel Probleem', 'Technisch Probleem'))) {
 					$type = $_POST['type'];
 				} else {
 					$type = 'Vraag';
